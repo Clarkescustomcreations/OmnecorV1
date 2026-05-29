@@ -1,13 +1,8 @@
 import { EventEmitter } from "events";
 import { v4 as uuidv4 } from "uuid";
+import { CriticalAction } from "../../../shared/hitl.js";
 
-export interface CriticalAction {
-  id: string;
-  toolName: string;
-  args: any;
-  status: "pending" | "approved" | "rejected";
-  timestamp: string;
-}
+export { CriticalAction };
 
 /**
  * HITLApprovalService
@@ -16,7 +11,8 @@ export interface CriticalAction {
 export class HITLApprovalService extends EventEmitter {
   private static instance: HITLApprovalService | null = null;
   private pendingActions: Map<string, CriticalAction> = new Map();
-  private approvalResolvers: Map<string, (approved: boolean) => void> = new Map();
+  private approvalResolvers: Map<string, (approved: boolean) => void> =
+    new Map();
 
   private constructor() {
     super();
@@ -47,7 +43,7 @@ export class HITLApprovalService extends EventEmitter {
     this.emit("actionPending", action);
 
     // Wait for manual approval/rejection
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.approvalResolvers.set(id, (approved: boolean) => {
         action.status = approved ? "approved" : "rejected";
         this.pendingActions.delete(id);

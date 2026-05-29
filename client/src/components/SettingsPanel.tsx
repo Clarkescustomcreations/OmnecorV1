@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,7 +42,7 @@ interface SettingsPanelProps {
 
 /**
  * Settings Panel Component
- * 
+ *
  * Comprehensive settings interface with:
  * - Knowledge base management
  * - Security settings
@@ -99,7 +105,9 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
           <Card>
             <CardHeader>
               <CardTitle className="text-sm">Appearance</CardTitle>
-              <CardDescription>Customize how Omnecor looks and feels</CardDescription>
+              <CardDescription>
+                Customize how Omnecor looks and feels
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -125,12 +133,17 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
                     max={18}
                     step={1}
                     className="flex-1"
-                    onValueChange={(v) => {
-                      setSettings({ ...settings, general: { ...settings.general, fontSize: v[0] } });
+                    onValueChange={v => {
+                      setSettings({
+                        ...settings,
+                        general: { ...settings.general, fontSize: v[0] },
+                      });
                       handleSettingChange();
                     }}
                   />
-                  <span className="text-sm font-mono w-12">{settings.general.fontSize}px</span>
+                  <span className="text-sm font-mono w-12">
+                    {settings.general.fontSize}px
+                  </span>
                 </div>
               </div>
 
@@ -162,8 +175,11 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
                 <label className="text-sm font-semibold">Auto-Save</label>
                 <Switch
                   checked={settings.general.autoSave}
-                  onCheckedChange={(checked) => {
-                    setSettings({ ...settings, general: { ...settings.general, autoSave: checked } });
+                  onCheckedChange={checked => {
+                    setSettings({
+                      ...settings,
+                      general: { ...settings.general, autoSave: checked },
+                    });
                     handleSettingChange();
                   }}
                 />
@@ -173,10 +189,13 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
                 <label className="text-sm font-semibold">Notifications</label>
                 <Switch
                   checked={settings.general.notificationsEnabled}
-                  onCheckedChange={(checked) => {
+                  onCheckedChange={checked => {
                     setSettings({
                       ...settings,
-                      general: { ...settings.general, notificationsEnabled: checked },
+                      general: {
+                        ...settings.general,
+                        notificationsEnabled: checked,
+                      },
                     });
                     handleSettingChange();
                   }}
@@ -184,13 +203,17 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Startup Behavior</label>
+                <label className="text-sm font-semibold">
+                  Startup Behavior
+                </label>
                 <Select value={settings.general.startupBehavior}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="last-session">Restore Last Session</SelectItem>
+                    <SelectItem value="last-session">
+                      Restore Last Session
+                    </SelectItem>
                     <SelectItem value="blank">Blank Workspace</SelectItem>
                     <SelectItem value="dashboard">Dashboard</SelectItem>
                   </SelectContent>
@@ -206,8 +229,12 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-sm">Knowledge Base Folders</CardTitle>
-                  <CardDescription>Manage indexed project folders</CardDescription>
+                  <CardTitle className="text-sm">
+                    Knowledge Base Folders
+                  </CardTitle>
+                  <CardDescription>
+                    Manage indexed project folders
+                  </CardDescription>
                 </div>
                 <Button size="sm">
                   <Plus className="w-4 h-4 mr-2" />
@@ -218,7 +245,7 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
             <CardContent className="space-y-3">
               <ScrollArea className="h-64">
                 <div className="space-y-2">
-                  {settings.knowledge.folders.map((folder) => (
+                  {settings.knowledge.folders.map(folder => (
                     <div
                       key={folder.id}
                       className="p-3 rounded-lg border bg-muted/50 flex items-center justify-between"
@@ -229,7 +256,8 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
                           {folder.path}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {folder.fileCount} files • {(folder.totalSize / 1024 / 1024).toFixed(1)} MB
+                          {folder.fileCount} files •{" "}
+                          {(folder.totalSize / 1024 / 1024).toFixed(1)} MB
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
@@ -248,7 +276,9 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
           <Card>
             <CardHeader>
               <CardTitle className="text-sm">Indexing Settings</CardTitle>
-              <CardDescription>Configure automatic indexing behavior</CardDescription>
+              <CardDescription>
+                Configure automatic indexing behavior
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
@@ -257,13 +287,15 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Index Interval (minutes)</label>
+                <label className="text-sm font-semibold">
+                  Index Interval (minutes)
+                </label>
                 <Slider
                   value={[settings.knowledge.indexInterval]}
                   min={5}
                   max={240}
                   step={5}
-                  onValueChange={(v) => {
+                  onValueChange={v => {
                     setSettings({
                       ...settings,
                       knowledge: { ...settings.knowledge, indexInterval: v[0] },
@@ -274,13 +306,15 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Max File Size (MB)</label>
+                <label className="text-sm font-semibold">
+                  Max File Size (MB)
+                </label>
                 <Slider
                   value={[settings.knowledge.maxFileSize]}
                   min={10}
                   max={500}
                   step={10}
-                  onValueChange={(v) => {
+                  onValueChange={v => {
                     setSettings({
                       ...settings,
                       knowledge: { ...settings.knowledge, maxFileSize: v[0] },
@@ -302,7 +336,9 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold">Malicious File Scan</label>
+                <label className="text-sm font-semibold">
+                  Malicious File Scan
+                </label>
                 <Switch checked={settings.security.maliciousFileScan} />
               </div>
 
@@ -312,10 +348,16 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Blacklisted File Types</label>
+                <label className="text-sm font-semibold">
+                  Blacklisted File Types
+                </label>
                 <div className="flex flex-wrap gap-2">
-                  {settings.security.fileTypeBlacklist.map((type) => (
-                    <Badge key={type} variant="secondary" className="cursor-pointer">
+                  {settings.security.fileTypeBlacklist.map(type => (
+                    <Badge
+                      key={type}
+                      variant="secondary"
+                      className="cursor-pointer"
+                    >
                       {type}
                       <Trash2 className="w-3 h-3 ml-1" />
                     </Badge>
@@ -337,18 +379,22 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
               </div>
 
               <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold">Encrypt API Keys</label>
+                <label className="text-sm font-semibold">
+                  Encrypt API Keys
+                </label>
                 <Switch checked={settings.security.apiKeyEncryption} />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Session Timeout (minutes)</label>
+                <label className="text-sm font-semibold">
+                  Session Timeout (minutes)
+                </label>
                 <Slider
                   value={[settings.security.sessionTimeout]}
                   min={5}
                   max={480}
                   step={5}
-                  onValueChange={(v) => {
+                  onValueChange={v => {
                     setSettings({
                       ...settings,
                       security: { ...settings.security, sessionTimeout: v[0] },
@@ -366,13 +412,19 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
           <Card>
             <CardHeader>
               <CardTitle className="text-sm">Data Privacy</CardTitle>
-              <CardDescription>Control how your data is handled</CardDescription>
+              <CardDescription>
+                Control how your data is handled
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-sm font-semibold">Zero-Login Mode</label>
-                  <p className="text-xs text-muted-foreground">All data stays local</p>
+                  <label className="text-sm font-semibold">
+                    Zero-Login Mode
+                  </label>
+                  <p className="text-xs text-muted-foreground">
+                    All data stays local
+                  </p>
                 </div>
                 <Switch checked={settings.privacy.zeroLoginMode} />
               </div>
@@ -401,7 +453,9 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold">Enable Cloud Sync</label>
+                <label className="text-sm font-semibold">
+                  Enable Cloud Sync
+                </label>
                 <Switch checked={settings.privacy.cloudSyncEnabled} />
               </div>
 
@@ -414,7 +468,9 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="google-drive">Google Drive</SelectItem>
+                        <SelectItem value="google-drive">
+                          Google Drive
+                        </SelectItem>
                         <SelectItem value="dropbox">Dropbox</SelectItem>
                         <SelectItem value="onedrive">OneDrive</SelectItem>
                       </SelectContent>
@@ -438,7 +494,9 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
           <Card>
             <CardHeader>
               <CardTitle className="text-sm">AI Model Defaults</CardTitle>
-              <CardDescription>Configure default model parameters</CardDescription>
+              <CardDescription>
+                Configure default model parameters
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -450,15 +508,20 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
                     max={2}
                     step={0.1}
                     className="flex-1"
-                    onValueChange={(v) => {
+                    onValueChange={v => {
                       setSettings({
                         ...settings,
-                        advanced: { ...settings.advanced, temperatureDefault: v[0] },
+                        advanced: {
+                          ...settings.advanced,
+                          temperatureDefault: v[0],
+                        },
                       });
                       handleSettingChange();
                     }}
                   />
-                  <span className="text-sm font-mono w-8">{settings.advanced.temperatureDefault.toFixed(1)}</span>
+                  <span className="text-sm font-mono w-8">
+                    {settings.advanced.temperatureDefault.toFixed(1)}
+                  </span>
                 </div>
               </div>
 
@@ -471,7 +534,7 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
                     max={1}
                     step={0.05}
                     className="flex-1"
-                    onValueChange={(v) => {
+                    onValueChange={v => {
                       setSettings({
                         ...settings,
                         advanced: { ...settings.advanced, topPDefault: v[0] },
@@ -479,21 +542,28 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
                       handleSettingChange();
                     }}
                   />
-                  <span className="text-sm font-mono w-8">{settings.advanced.topPDefault.toFixed(2)}</span>
+                  <span className="text-sm font-mono w-8">
+                    {settings.advanced.topPDefault.toFixed(2)}
+                  </span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold">Max Context Tokens</label>
+                <label className="text-sm font-semibold">
+                  Max Context Tokens
+                </label>
                 <Slider
                   value={[settings.advanced.maxContextTokens]}
                   min={1000}
                   max={32000}
                   step={1000}
-                  onValueChange={(v) => {
+                  onValueChange={v => {
                     setSettings({
                       ...settings,
-                      advanced: { ...settings.advanced, maxContextTokens: v[0] },
+                      advanced: {
+                        ...settings.advanced,
+                        maxContextTokens: v[0],
+                      },
                     });
                     handleSettingChange();
                   }}
@@ -505,7 +575,9 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
           <Card>
             <CardHeader>
               <CardTitle className="text-sm">Developer Options</CardTitle>
-              <CardDescription>Advanced debugging and performance tuning</CardDescription>
+              <CardDescription>
+                Advanced debugging and performance tuning
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
@@ -514,7 +586,9 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
               </div>
 
               <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold">Enable Dev Tools</label>
+                <label className="text-sm font-semibold">
+                  Enable Dev Tools
+                </label>
                 <Switch checked={settings.advanced.enableDevTools} />
               </div>
 
@@ -554,11 +628,7 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
             Import
           </Button>
         </div>
-        <Button
-          size="sm"
-          disabled={!hasChanges}
-          onClick={handleSave}
-        >
+        <Button size="sm" disabled={!hasChanges} onClick={handleSave}>
           <Save className="w-4 h-4 mr-2" />
           Save Changes
         </Button>

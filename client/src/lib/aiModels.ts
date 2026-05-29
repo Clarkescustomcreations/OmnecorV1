@@ -1,11 +1,18 @@
 /**
  * AI Model Management Library
- * 
+ *
  * Handles local models (Ollama, Llama.cpp) and API-based models
  * with configuration, discovery, and health checking.
  */
 
-export type ModelSource = "ollama" | "llamacpp" | "openai" | "anthropic" | "gemini" | "groq" | "custom";
+export type ModelSource =
+  | "ollama"
+  | "llamacpp"
+  | "openai"
+  | "anthropic"
+  | "gemini"
+  | "groq"
+  | "custom";
 export type ModelStatus = "available" | "loading" | "error" | "offline";
 
 export interface LocalModel {
@@ -276,8 +283,10 @@ export function convertToAIModel(
         chat: true,
         completion: true,
         embedding: apiModel.provider === "openai",
-        vision: apiModel.provider === "openai" || apiModel.provider === "gemini",
-        functionCalling: apiModel.provider === "openai" || apiModel.provider === "anthropic",
+        vision:
+          apiModel.provider === "openai" || apiModel.provider === "gemini",
+        functionCalling:
+          apiModel.provider === "openai" || apiModel.provider === "anthropic",
       },
     };
   }
@@ -288,8 +297,8 @@ export function convertToAIModel(
  */
 export function getAllModels(selectedId?: string): AIModel[] {
   const allModels: AIModel[] = [
-    ...mockLocalModels.map((m) => convertToAIModel(m, m.id === selectedId)),
-    ...mockAPIModels.map((m) => convertToAIModel(m, m.id === selectedId)),
+    ...mockLocalModels.map(m => convertToAIModel(m, m.id === selectedId)),
+    ...mockAPIModels.map(m => convertToAIModel(m, m.id === selectedId)),
   ];
   return allModels;
 }
@@ -299,7 +308,7 @@ export function getAllModels(selectedId?: string): AIModel[] {
  */
 export function getModelsBySource(source: ModelSource): AIModel[] {
   const allModels = getAllModels();
-  return allModels.filter((m) => m.source === source);
+  return allModels.filter(m => m.source === source);
 }
 
 /**
@@ -307,7 +316,7 @@ export function getModelsBySource(source: ModelSource): AIModel[] {
  */
 export function getModelsByType(type: "local" | "api"): AIModel[] {
   const allModels = getAllModels();
-  return allModels.filter((m) => m.type === type);
+  return allModels.filter(m => m.type === type);
 }
 
 /**
@@ -333,7 +342,7 @@ export async function checkModelHealth(model: AIModel): Promise<ModelStatus> {
  */
 export function getModelById(id: string): AIModel | undefined {
   const allModels = getAllModels();
-  return allModels.find((m) => m.id === id);
+  return allModels.find(m => m.id === id);
 }
 
 /**
@@ -341,5 +350,5 @@ export function getModelById(id: string): AIModel | undefined {
  */
 export function getSelectedModel(): AIModel | undefined {
   const allModels = getAllModels();
-  return allModels.find((m) => m.isSelected);
+  return allModels.find(m => m.isSelected);
 }

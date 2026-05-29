@@ -17,7 +17,9 @@ const espFlashSchema = z.object({
   port: z.string().min(1),
   firmwarePath: z.string().min(1),
   baud: z.number().int().min(9600).max(4000000).optional(),
-  chip: z.enum(["esp32", "esp32s2", "esp32s3", "esp32c3", "esp8266"]).optional(),
+  chip: z
+    .enum(["esp32", "esp32s2", "esp32s3", "esp32c3", "esp8266"])
+    .optional(),
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -81,11 +83,13 @@ export const espRouter = router({
 
   /** Read ESP flash memory to a file */
   read: publicProcedure
-    .input(z.object({
-      port: z.string().min(1),
-      outputFile: z.string().min(1),
-      size: z.string().optional(),
-    }))
+    .input(
+      z.object({
+        port: z.string().min(1),
+        outputFile: z.string().min(1),
+        size: z.string().optional(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       try {
         const jobId = await ctx.services.esp.readFlash(input);

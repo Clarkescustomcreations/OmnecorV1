@@ -1,6 +1,6 @@
 /**
  * Neural Node-Tree Data Structures and Utilities
- * 
+ *
  * This module provides the core data structures for converting file system
  * hierarchies into a spatial graph representation where:
  * - Folders become nodes
@@ -71,7 +71,7 @@ export interface NeuralNetwork {
 
 /**
  * Convert a flat file system structure into a hierarchical neural network
- * 
+ *
  * @param files - Array of file system nodes
  * @param projectName - Name of the project/network
  * @returns NeuralNetwork with nodes and edges for graph visualization
@@ -106,7 +106,7 @@ export function convertFileSystemToNeuralNetwork(
 
   // Group files by folder
   const folderMap = new Map<string, FileSystemNode[]>();
-  files.forEach((file) => {
+  files.forEach(file => {
     const folder = file.parent || "root";
     if (!folderMap.has(folder)) {
       folderMap.set(folder, []);
@@ -116,7 +116,7 @@ export function convertFileSystemToNeuralNetwork(
 
   // Create nodes for folders and files
   let nodeIndex = 0;
-  files.forEach((file) => {
+  files.forEach(file => {
     const depth = (file.path.match(/\//g) || []).length;
     const angle = (nodeIndex * 360) / Math.max(files.length, 1);
     const radius = 150 + depth * 100;
@@ -130,7 +130,8 @@ export function convertFileSystemToNeuralNetwork(
       data: {
         path: file.path,
         depth,
-        fileCount: file.type === "folder" ? (file.children?.length || 0) : undefined,
+        fileCount:
+          file.type === "folder" ? file.children?.length || 0 : undefined,
       },
       position: { x, y },
       style: {
@@ -222,7 +223,7 @@ export function convertNetworkToTreeStructure(
   const roots: TreeNode[] = [];
 
   // Create tree nodes
-  network.nodes.forEach((node) => {
+  network.nodes.forEach(node => {
     const treeNode: TreeNode = {
       id: node.id,
       label: node.label,
@@ -235,7 +236,7 @@ export function convertNetworkToTreeStructure(
   });
 
   // Build parent-child relationships
-  network.edges.forEach((edge) => {
+  network.edges.forEach(edge => {
     const parent = nodeMap.get(edge.source);
     const child = nodeMap.get(edge.target);
 
@@ -247,11 +248,11 @@ export function convertNetworkToTreeStructure(
 
   // Find root nodes (nodes with no incoming edges)
   const hasParent = new Set<string>();
-  network.edges.forEach((edge) => {
+  network.edges.forEach(edge => {
     hasParent.add(edge.target);
   });
 
-  network.nodes.forEach((node) => {
+  network.nodes.forEach(node => {
     if (!hasParent.has(node.id)) {
       const treeNode = nodeMap.get(node.id);
       if (treeNode) {

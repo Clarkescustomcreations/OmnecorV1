@@ -1,5 +1,11 @@
 import React, { useState, useMemo } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, AlertCircle, CheckCircle, X } from "lucide-react";
@@ -18,7 +24,7 @@ interface HITLAlertPanelProps {
 
 /**
  * HITL Alert Panel Component
- * 
+ *
  * Displays human-in-the-loop alerts for loop detection.
  * Non-dismissible without explicit user action (retry, modify, or abort).
  */
@@ -30,15 +36,19 @@ export default function HITLAlertPanel({
   onDismiss,
   className,
 }: HITLAlertPanelProps) {
-  const [selectedAction, setSelectedAction] = useState<"retry" | "modify" | "abort" | null>(null);
-  
+  const [selectedAction, setSelectedAction] = useState<
+    "retry" | "modify" | "abort" | null
+  >(null);
+
   // WebSocket Integration
-  const { loopAlert, clearLoopAlert } = useOmnecorSocket({ listenForLoops: true });
+  const { loopAlert, clearLoopAlert } = useOmnecorSocket({
+    listenForLoops: true,
+  });
 
   // Map loopAlert from WebSocket to HITLAlert format if no propAlert is provided
   const activeAlert = useMemo(() => {
     if (propAlert) return propAlert;
-    
+
     if (loopAlert) {
       return {
         id: `loop-${loopAlert.actionHash}`,
@@ -51,7 +61,7 @@ export default function HITLAlertPanel({
             hash: loopAlert.actionHash,
             tool: "Autonomous Agent",
             timestamp: new Date(),
-          }
+          },
         ],
         userActions: {
           retry: true,
@@ -61,7 +71,7 @@ export default function HITLAlertPanel({
         resolved: false,
       };
     }
-    
+
     return null;
   }, [propAlert, loopAlert]);
 
@@ -114,24 +124,39 @@ export default function HITLAlertPanel({
   };
 
   return (
-    <Card className={cn("border-2 shadow-2xl animate-in fade-in zoom-in duration-300", getSeverityColor(), className)}>
+    <Card
+      className={cn(
+        "border-2 shadow-2xl animate-in fade-in zoom-in duration-300",
+        getSeverityColor(),
+        className
+      )}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3 flex-1">
             {getSeverityIcon()}
             <div className="flex-1">
               <CardTitle className="text-lg">{activeAlert.title}</CardTitle>
-              <CardDescription className="mt-1 text-sm">{activeAlert.message}</CardDescription>
+              <CardDescription className="mt-1 text-sm">
+                {activeAlert.message}
+              </CardDescription>
             </div>
           </div>
           <Badge
-            variant={activeAlert.severity === "critical" ? "destructive" : "secondary"}
+            variant={
+              activeAlert.severity === "critical" ? "destructive" : "secondary"
+            }
             className="text-xs"
           >
             {activeAlert.severity.toUpperCase()}
           </Badge>
           {onDismiss && (
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onDismiss}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={onDismiss}
+            >
               <X className="w-4 h-4" />
             </Button>
           )}
@@ -144,10 +169,16 @@ export default function HITLAlertPanel({
           <h4 className="text-sm font-semibold">Action Context</h4>
           <div className="space-y-1 max-h-32 overflow-y-auto bg-muted/50 rounded-lg p-2">
             {activeAlert.actionHistory.map((action, index) => (
-              <div key={`${action.hash}-${index}`} className="text-xs font-mono text-muted-foreground">
-                <span className="text-accent">#{index + 1}</span> {action.tool} •{" "}
-                <span className="text-foreground">{action.hash.substring(0, 8)}...</span> •{" "}
-                {action.timestamp.toLocaleTimeString()}
+              <div
+                key={`${action.hash}-${index}`}
+                className="text-xs font-mono text-muted-foreground"
+              >
+                <span className="text-accent">#{index + 1}</span> {action.tool}{" "}
+                •{" "}
+                <span className="text-foreground">
+                  {action.hash.substring(0, 8)}...
+                </span>{" "}
+                • {action.timestamp.toLocaleTimeString()}
               </div>
             ))}
           </div>
@@ -157,11 +188,15 @@ export default function HITLAlertPanel({
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="p-2 rounded-lg bg-muted">
             <p className="text-muted-foreground mb-1">Alert ID</p>
-            <p className="font-mono truncate">{activeAlert.id.substring(0, 16)}...</p>
+            <p className="font-mono truncate">
+              {activeAlert.id.substring(0, 16)}...
+            </p>
           </div>
           <div className="p-2 rounded-lg bg-muted">
             <p className="text-muted-foreground mb-1">Triggered</p>
-            <p className="font-mono">{activeAlert.timestamp.toLocaleTimeString()}</p>
+            <p className="font-mono">
+              {activeAlert.timestamp.toLocaleTimeString()}
+            </p>
           </div>
         </div>
 
@@ -208,7 +243,12 @@ export default function HITLAlertPanel({
         {activeAlert.resolved && (
           <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30">
             <p className="text-xs text-green-700 dark:text-green-400">
-              ✓ Alert resolved with action: <span className="font-semibold">{"userDecision" in activeAlert ? (activeAlert as any).userDecision : 'N/A'}</span>
+              ✓ Alert resolved with action:{" "}
+              <span className="font-semibold">
+                {"userDecision" in activeAlert
+                  ? (activeAlert as any).userDecision
+                  : "N/A"}
+              </span>
             </p>
           </div>
         )}
@@ -216,7 +256,8 @@ export default function HITLAlertPanel({
         {/* Warning */}
         <div className="p-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
           <p className="text-xs text-yellow-700 dark:text-yellow-400">
-            ⚠️ This alert cannot be dismissed until you take action. Choose Retry, Modify, or Abort.
+            ⚠️ This alert cannot be dismissed until you take action. Choose
+            Retry, Modify, or Abort.
           </p>
         </div>
       </CardContent>

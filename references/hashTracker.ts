@@ -199,7 +199,7 @@ export class LoopDetector {
     // of them equals `hash`, then recording `hash` again would complete a
     // run of `loopThreshold` identical consecutive hashes.
     const tail = this.history.slice(-(this.loopThreshold - 1));
-    return tail.every((entry) => entry.hash === hash);
+    return tail.every(entry => entry.hash === hash);
   }
 
   /**
@@ -257,7 +257,7 @@ export class LoopDetector {
    */
   snapshot(): LoopDetectorSnapshot {
     return {
-      history: this.history.map((e) => ({ ...e })), // shallow clone each entry
+      history: this.history.map(e => ({ ...e })), // shallow clone each entry
       maxHistorySize: this.maxHistorySize,
       loopThreshold: this.loopThreshold,
     };
@@ -293,6 +293,6 @@ export class LoopDetector {
    * Clamped to the actual history length.
    */
   tail(n: number): HistoryEntry[] {
-    return this.history.slice(-Math.max(0, n)).map((e) => ({ ...e }));
+    return this.history.slice(-Math.max(0, n)).map(e => ({ ...e }));
   }
 }

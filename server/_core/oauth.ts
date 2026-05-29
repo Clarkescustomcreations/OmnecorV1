@@ -15,15 +15,15 @@ export function registerOAuthRoutes(app: Express) {
   app.get("/api/oauth/login", (req: Request, res: Response) => {
     const state = crypto.randomBytes(32).toString("hex");
     const cookieOptions = getSessionCookieOptions(req);
-    
+
     // Set state in a secure, HTTP-only cookie
-    res.cookie("oauth_state", state, { 
-        ...cookieOptions, 
-        maxAge: 10 * 60 * 1000, // 10 minutes
-        httpOnly: true,
-        secure: true, 
+    res.cookie("oauth_state", state, {
+      ...cookieOptions,
+      maxAge: 10 * 60 * 1000, // 10 minutes
+      httpOnly: true,
+      secure: true,
     });
-    
+
     // Redirect to OAuth provider with state
     const redirectUri = `${req.protocol}://${req.get("host")}/api/oauth/callback`;
     const oauthUrl = new URL(`${process.env.OAUTH_SERVER_URL}/app-auth`);
@@ -69,8 +69,11 @@ export function registerOAuthRoutes(app: Express) {
       });
 
       const cookieOptions = getSessionCookieOptions(req);
-      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-      
+      res.cookie(COOKIE_NAME, sessionToken, {
+        ...cookieOptions,
+        maxAge: ONE_YEAR_MS,
+      });
+
       // Clear state cookie
       res.clearCookie("oauth_state", cookieOptions);
 

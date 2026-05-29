@@ -86,8 +86,10 @@ export const securityRouter = router({
     .input(scanDirectorySchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const results = await ctx.services.security.scanDirectory(input.dirPath);
-        const threats = results.filter((r) => !r.isSafe);
+        const results = await ctx.services.security.scanDirectory(
+          input.dirPath
+        );
+        const threats = results.filter(r => !r.isSafe);
         return {
           totalFiles: results.length,
           safeFiles: results.length - threats.length,
@@ -111,7 +113,10 @@ export const securityRouter = router({
     .input(encryptFileSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const outputPath = await ctx.services.security.encryptFile(input.filePath, input.passphrase);
+        const outputPath = await ctx.services.security.encryptFile(
+          input.filePath,
+          input.passphrase
+        );
         return { success: true, outputPath };
       } catch (error) {
         throw new TRPCError({
@@ -126,7 +131,10 @@ export const securityRouter = router({
     .input(decryptFileSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const outputPath = await ctx.services.security.decryptFile(input.encryptedPath, input.passphrase);
+        const outputPath = await ctx.services.security.decryptFile(
+          input.encryptedPath,
+          input.passphrase
+        );
         return { success: true, outputPath };
       } catch (error) {
         throw new TRPCError({
@@ -141,7 +149,10 @@ export const securityRouter = router({
     .input(generateKeySchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const metadata = await ctx.services.security.generateProjectKey(input.projectId, input.passphrase);
+        const metadata = await ctx.services.security.generateProjectKey(
+          input.projectId,
+          input.passphrase
+        );
         return {
           success: true,
           keyId: metadata.keyId,

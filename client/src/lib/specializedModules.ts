@@ -1,6 +1,6 @@
 /**
  * Specialized Module Launchers
- * 
+ *
  * Three specialized tools for advanced AI-assisted workflows:
  * 1. Custom LLM Builder - Fine-tuning with LoRA/QLoRA
  * 2. AI-Assisted 3D Modeler - Blender co-pilot
@@ -140,7 +140,10 @@ export function createLoRAConfig(
 /**
  * Create an LLM Builder session
  */
-export function createLLMBuilderSession(name: string, baseModel: string): LLMBuilderSession {
+export function createLLMBuilderSession(
+  name: string,
+  baseModel: string
+): LLMBuilderSession {
   return {
     id: `llm_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     name,
@@ -157,7 +160,10 @@ export function createLLMBuilderSession(name: string, baseModel: string): LLMBui
 /**
  * Add LoRA config to session
  */
-export function addLoRAConfig(session: LLMBuilderSession, config: LoRAConfig): LLMBuilderSession {
+export function addLoRAConfig(
+  session: LLMBuilderSession,
+  config: LoRAConfig
+): LLMBuilderSession {
   return {
     ...session,
     loraConfigs: [...session.loraConfigs, config],
@@ -295,7 +301,11 @@ export function addPCBComponent(
 /**
  * Add net to PCB project
  */
-export function addPCBNet(project: PCBProject, name: string, connections: string[]): PCBProject {
+export function addPCBNet(
+  project: PCBProject,
+  name: string,
+  connections: string[]
+): PCBProject {
   return {
     ...project,
     nets: [
@@ -348,10 +358,14 @@ export function createSpecializedModule(
  * Get module display info
  */
 export function getModuleInfo(type: ModuleType) {
-  const moduleInfo: Record<ModuleType, { title: string; description: string; icon: string }> = {
+  const moduleInfo: Record<
+    ModuleType,
+    { title: string; description: string; icon: string }
+  > = {
     "llm-builder": {
       title: "Custom LLM Builder",
-      description: "Fine-tune models with LoRA/QLoRA and visualize neural networks",
+      description:
+        "Fine-tune models with LoRA/QLoRA and visualize neural networks",
       icon: "🧠",
     },
     "3d-modeler": {

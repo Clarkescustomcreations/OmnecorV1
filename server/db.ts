@@ -1,14 +1,14 @@
 import { eq, asc, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { 
-  InsertUser, 
-  users, 
-  chatSessions, 
-  chatMessages, 
-  InsertChatSession, 
-  InsertChatMessage 
+import {
+  InsertUser,
+  users,
+  chatSessions,
+  chatMessages,
+  InsertChatSession,
+  InsertChatMessage,
 } from "../drizzle/schema.js";
-import { ENV } from './_core/env.js';
+import { ENV } from "./_core/env.js";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -63,8 +63,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.role = user.role;
       updateSet.role = user.role;
     } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
+      values.role = "admin";
+      updateSet.role = "admin";
     }
 
     if (!values.lastSignedIn) {
@@ -91,7 +91,11 @@ export async function getUserByOpenId(openId: string) {
     return undefined;
   }
 
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.openId, openId))
+    .limit(1);
 
   return result.length > 0 ? result[0] : undefined;
 }
@@ -109,7 +113,8 @@ export async function createChatSession(session: InsertChatSession) {
 export async function getChatSessions(projectId: string) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select()
+  return await db
+    .select()
     .from(chatSessions)
     .where(eq(chatSessions.projectId, projectId))
     .orderBy(desc(chatSessions.createdAt));
@@ -118,17 +123,22 @@ export async function getChatSessions(projectId: string) {
 export async function getChatSession(sessionId: string) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select()
+  const result = await db
+    .select()
     .from(chatSessions)
     .where(eq(chatSessions.id, sessionId))
     .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function updateChatSession(sessionId: string, updates: Partial<InsertChatSession>) {
+export async function updateChatSession(
+  sessionId: string,
+  updates: Partial<InsertChatSession>
+) {
   const db = await getDb();
   if (!db) return;
-  await db.update(chatSessions)
+  await db
+    .update(chatSessions)
     .set({ ...updates, updatedAt: new Date() })
     .where(eq(chatSessions.id, sessionId));
 }
@@ -142,7 +152,8 @@ export async function addChatMessage(message: InsertChatMessage) {
 export async function getChatMessages(sessionId: string) {
   const db = await getDb();
   if (!db) return [];
-  return await db.select()
+  return await db
+    .select()
     .from(chatMessages)
     .where(eq(chatMessages.sessionId, sessionId))
     .orderBy(asc(chatMessages.createdAt));

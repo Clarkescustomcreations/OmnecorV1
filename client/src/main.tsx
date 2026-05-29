@@ -1,7 +1,13 @@
 import { trpc } from "@/lib/trpc";
-import { UNAUTHED_ERR_MSG } from '@shared/const';
+import { UNAUTHED_ERR_MSG } from "@shared/const";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink, TRPCClientError, splitLink, wsLink, createWSClient } from "@trpc/client";
+import {
+  httpBatchLink,
+  TRPCClientError,
+  splitLink,
+  wsLink,
+  createWSClient,
+} from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
@@ -40,7 +46,7 @@ queryClient.getMutationCache().subscribe(event => {
 
 const wsClient = createWSClient({
   url: () => {
-    const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
     return `${proto}//${window.location.host}/api/trpc`;
   },
 });
@@ -48,13 +54,16 @@ const wsClient = createWSClient({
 const trpcClient = trpc.createClient({
   links: [
     splitLink({
-      condition: (op) => op.type === 'subscription',
+      condition: op => op.type === "subscription",
       true: wsLink({ client: wsClient, transformer: superjson }),
       false: httpBatchLink({
-        url: '/api/trpc',
+        url: "/api/trpc",
         transformer: superjson,
         fetch(input, init) {
-          return globalThis.fetch(input, { ...(init ?? {}), credentials: 'include' });
+          return globalThis.fetch(input, {
+            ...(init ?? {}),
+            credentials: "include",
+          });
         },
       }),
     }),

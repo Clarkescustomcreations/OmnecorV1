@@ -297,7 +297,7 @@ export class VoiceService extends EventEmitter {
         throw new Error(error);
       }
 
-      const data = await response.json() as any;
+      const data = (await response.json()) as any;
 
       const result: TranscriptionResult = {
         text: data.text,
@@ -329,10 +329,13 @@ export class VoiceService extends EventEmitter {
       return result;
     } catch (error) {
       let errorMessage = (error as Error).message;
-      if (errorMessage.includes("fetch failed") || errorMessage.includes("ECONNREFUSED")) {
+      if (
+        errorMessage.includes("fetch failed") ||
+        errorMessage.includes("ECONNREFUSED")
+      ) {
         errorMessage = `[Omnecor Voice] Whisper server unreachable at ${this.whisperUrl}.`;
       }
-      
+
       this.emit("lifecycle", {
         jobId,
         type: "transcription",
@@ -340,7 +343,7 @@ export class VoiceService extends EventEmitter {
         error: errorMessage,
         timestamp: new Date().toISOString(),
       } as VoiceEventData);
-      
+
       throw new Error(errorMessage);
     }
   }
@@ -434,7 +437,7 @@ export class VoiceService extends EventEmitter {
         };
       } else {
         // Otherwise, it's a JSON response with the file path
-        const data = await response.json() as any;
+        const data = (await response.json()) as any;
         result = {
           outputPath: data.output_path,
           contentType: "audio/wav",
@@ -456,10 +459,13 @@ export class VoiceService extends EventEmitter {
       return result;
     } catch (error) {
       let errorMessage = (error as Error).message;
-      if (errorMessage.includes("fetch failed") || errorMessage.includes("ECONNREFUSED")) {
+      if (
+        errorMessage.includes("fetch failed") ||
+        errorMessage.includes("ECONNREFUSED")
+      ) {
         errorMessage = `[Omnecor Voice] TTS server unreachable at ${this.ttsUrl}.`;
       }
-      
+
       this.emit("lifecycle", {
         jobId,
         type: "synthesis",
@@ -467,7 +473,7 @@ export class VoiceService extends EventEmitter {
         error: errorMessage,
         timestamp: new Date().toISOString(),
       } as VoiceEventData);
-      
+
       throw new Error(errorMessage);
     }
   }
@@ -553,7 +559,7 @@ export class VoiceService extends EventEmitter {
     const fileBuffer = await fs.readFile(audioFilePath);
     const formData = new FormData();
     const blob = new Blob([new Uint8Array(fileBuffer)], { type: "audio/wav" });
-    
+
     formData.append("source_audio", blob, path.basename(audioFilePath));
     formData.append("model_path", modelPath);
     formData.append("pitch_shift", String(pitchShift));
@@ -581,7 +587,11 @@ export class VoiceService extends EventEmitter {
       const outputBuffer = Buffer.from(audioArrayBuffer);
 
       // Save output
-      const outputDir = path.join(process.env.HOME || "/tmp", ".omnecor", "rvc_output");
+      const outputDir = path.join(
+        process.env.HOME || "/tmp",
+        ".omnecor",
+        "rvc_output"
+      );
       await fs.mkdir(outputDir, { recursive: true });
       const outputPath = path.join(outputDir, `converted_${Date.now()}.wav`);
       await fs.writeFile(outputPath, outputBuffer);
@@ -605,10 +615,13 @@ export class VoiceService extends EventEmitter {
       return result;
     } catch (error) {
       let errorMessage = (error as Error).message;
-      if (errorMessage.includes("fetch failed") || errorMessage.includes("ECONNREFUSED")) {
+      if (
+        errorMessage.includes("fetch failed") ||
+        errorMessage.includes("ECONNREFUSED")
+      ) {
         errorMessage = `[Omnecor Voice] RVC server unreachable at ${this.rvcUrl}`;
       }
-      
+
       this.emit("lifecycle", {
         jobId,
         type: "conversion",
@@ -616,7 +629,7 @@ export class VoiceService extends EventEmitter {
         error: errorMessage,
         timestamp: new Date().toISOString(),
       } as VoiceEventData);
-      
+
       throw new Error(errorMessage);
     }
   }
@@ -634,7 +647,10 @@ export class VoiceService extends EventEmitter {
 
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), this.healthCheckTimeout);
+      const timeout = setTimeout(
+        () => controller.abort(),
+        this.healthCheckTimeout
+      );
 
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeout);
@@ -651,7 +667,7 @@ export class VoiceService extends EventEmitter {
         };
       }
 
-      const data = await response.json() as any;
+      const data = (await response.json()) as any;
 
       return {
         service,

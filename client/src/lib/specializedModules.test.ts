@@ -21,7 +21,11 @@ import {
 describe("Specialized Modules", () => {
   describe("LoRA Configuration", () => {
     it("should create LoRA config with defaults", () => {
-      const config = createLoRAConfig("Test LoRA", "mistral-7b", "/data/dataset");
+      const config = createLoRAConfig(
+        "Test LoRA",
+        "mistral-7b",
+        "/data/dataset"
+      );
 
       expect(config.id).toBeDefined();
       expect(config.name).toBe("Test LoRA");
@@ -32,11 +36,16 @@ describe("Specialized Modules", () => {
     });
 
     it("should create LoRA config with custom values", () => {
-      const config = createLoRAConfig("Custom LoRA", "llama-13b", "/data/dataset", {
-        rank: 32,
-        alpha: 64,
-        epochs: 5,
-      });
+      const config = createLoRAConfig(
+        "Custom LoRA",
+        "llama-13b",
+        "/data/dataset",
+        {
+          rank: 32,
+          alpha: 64,
+          epochs: 5,
+        }
+      );
 
       expect(config.rank).toBe(32);
       expect(config.alpha).toBe(64);
@@ -95,7 +104,11 @@ describe("Specialized Modules", () => {
 
   describe("Blender Project", () => {
     it("should create Blender project", () => {
-      const project = createBlenderProject("Test Project", "/path/to/file.blend", "Test description");
+      const project = createBlenderProject(
+        "Test Project",
+        "/path/to/file.blend",
+        "Test description"
+      );
 
       expect(project.id).toBeDefined();
       expect(project.name).toBe("Test Project");
@@ -149,7 +162,11 @@ describe("Specialized Modules", () => {
 
   describe("PCB Project", () => {
     it("should create PCB project", () => {
-      const project = createPCBProject("Test PCB", "/path/to/file.kicad_pcb", "Test board");
+      const project = createPCBProject(
+        "Test PCB",
+        "/path/to/file.kicad_pcb",
+        "Test board"
+      );
 
       expect(project.id).toBeDefined();
       expect(project.name).toBe("Test PCB");
@@ -205,7 +222,11 @@ describe("Specialized Modules", () => {
 
   describe("Specialized Module", () => {
     it("should create specialized module", () => {
-      const module = createSpecializedModule("llm-builder", "Test Module", "Test description");
+      const module = createSpecializedModule(
+        "llm-builder",
+        "Test Module",
+        "Test description"
+      );
 
       expect(module.id).toBeDefined();
       expect(module.type).toBe("llm-builder");

@@ -1,6 +1,6 @@
 /**
  * Chat & Context Management Library
- * 
+ *
  * Handles chat messages, conversation history, context transparency,
  * and Visual Context Map for the AI chat interface.
  */
@@ -110,7 +110,10 @@ export function createConversation(
     createdAt: new Date(),
     updatedAt: new Date(),
     modelId,
-    totalTokensUsed: initialMessages.reduce((sum, msg) => sum + (msg.tokens || 0), 0),
+    totalTokensUsed: initialMessages.reduce(
+      (sum, msg) => sum + (msg.tokens || 0),
+      0
+    ),
   };
 }
 
@@ -136,7 +139,9 @@ export function addFileToContext(
   conversation: ConversationContext,
   file: ContextFile
 ): ConversationContext {
-  const existingIndex = conversation.contextFiles.findIndex((f) => f.id === file.id);
+  const existingIndex = conversation.contextFiles.findIndex(
+    f => f.id === file.id
+  );
 
   let updatedFiles: ContextFile[];
   if (existingIndex >= 0) {
@@ -165,7 +170,7 @@ export function removeFileFromContext(
 ): ConversationContext {
   return {
     ...conversation,
-    contextFiles: conversation.contextFiles.filter((f) => f.id !== fileId),
+    contextFiles: conversation.contextFiles.filter(f => f.id !== fileId),
     updatedAt: new Date(),
   };
 }
@@ -177,7 +182,7 @@ export function toggleFileInContext(
   conversation: ConversationContext,
   fileId: string
 ): ConversationContext {
-  const updatedFiles = conversation.contextFiles.map((f) =>
+  const updatedFiles = conversation.contextFiles.map(f =>
     f.id === fileId ? { ...f, included: !f.included } : f
   );
 
@@ -198,7 +203,7 @@ export function calculateContextTransparency(
 ): ContextTransparency {
   const conversationTokens = conversation.totalTokensUsed;
   const fileTokens = conversation.contextFiles
-    .filter((f) => f.included)
+    .filter(f => f.included)
     .reduce((sum, f) => sum + f.tokens, 0);
 
   const totalTokens = systemPromptTokens + conversationTokens + fileTokens;
@@ -219,15 +224,19 @@ export function calculateContextTransparency(
 /**
  * Get included files for context
  */
-export function getIncludedFiles(conversation: ConversationContext): ContextFile[] {
-  return conversation.contextFiles.filter((f) => f.included);
+export function getIncludedFiles(
+  conversation: ConversationContext
+): ContextFile[] {
+  return conversation.contextFiles.filter(f => f.included);
 }
 
 /**
  * Get excluded files from context
  */
-export function getExcludedFiles(conversation: ConversationContext): ContextFile[] {
-  return conversation.contextFiles.filter((f) => !f.included);
+export function getExcludedFiles(
+  conversation: ConversationContext
+): ContextFile[] {
+  return conversation.contextFiles.filter(f => !f.included);
 }
 
 /**
@@ -243,7 +252,8 @@ export const mockContextFiles: ContextFile[] = [
     tokens: 512,
     included: true,
     lastModified: new Date(Date.now() - 3600000),
-    preview: "// Omnecor main entry point\nexport function initialize() { ... }",
+    preview:
+      "// Omnecor main entry point\nexport function initialize() { ... }",
   },
   {
     id: "file_2",
@@ -254,7 +264,8 @@ export const mockContextFiles: ContextFile[] = [
     tokens: 384,
     included: true,
     lastModified: new Date(Date.now() - 7200000),
-    preview: "// Utility functions\nexport function formatDate(date: Date) { ... }",
+    preview:
+      "// Utility functions\nexport function formatDate(date: Date) { ... }",
   },
   {
     id: "file_3",
@@ -276,7 +287,8 @@ export const mockContextFiles: ContextFile[] = [
     tokens: 128,
     included: true,
     lastModified: new Date(Date.now() - 172800000),
-    preview: '{\n  "version": "1.0.0",\n  "features": ["chat", "brain-map", "model-hub"]\n}',
+    preview:
+      '{\n  "version": "1.0.0",\n  "features": ["chat", "brain-map", "model-hub"]\n}',
   },
 ];
 
@@ -308,5 +320,8 @@ export function createMockConversation(): ConversationContext {
   );
 
   // Add mock context files
-  return mockContextFiles.reduce((conv, file) => addFileToContext(conv, file), conversation);
+  return mockContextFiles.reduce(
+    (conv, file) => addFileToContext(conv, file),
+    conversation
+  );
 }

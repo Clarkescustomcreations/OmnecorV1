@@ -11,15 +11,19 @@ Welcome to **Omnecor HMCI**. This guide provides essential information to get st
 ## Frequently Asked Questions
 
 ### What is Omnecor?
+
 Omnecor is the premier Human-Machine Collaboration Interface, acting as the central nervous system for digital and physical workflows.
 
 ### Is my data private?
+
 Yes, Omnecor operates in **Zero-Login mode** by default. Your data remains local.
 
 ### Where can I find support?
+
 - **Troubleshooting Guide**: `TROUBLESHOOTING.md`
 - **GitHub Issues**: Report bugs or request features.
 - **Support Email**: support@omnecor.ai
 
 ---
+
 **Building the future of human-machine collaboration.**

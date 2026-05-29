@@ -70,15 +70,23 @@ async function startServer() {
     await security.initialize();
     console.log("[Omnecor] SecurityService initialized");
   } catch (error) {
-    console.warn("[Omnecor] SecurityService init warning:", (error as Error).message);
+    console.warn(
+      "[Omnecor] SecurityService init warning:",
+      (error as Error).message
+    );
   }
 
   try {
     const vectorDB = VectorDBService.getInstance();
     await vectorDB.init();
-    console.log("[Omnecor] VectorDBService initialized (or degraded gracefully)");
+    console.log(
+      "[Omnecor] VectorDBService initialized (or degraded gracefully)"
+    );
   } catch (error) {
-    console.warn("[Omnecor] VectorDBService init warning:", (error as Error).message);
+    console.warn(
+      "[Omnecor] VectorDBService init warning:",
+      (error as Error).message
+    );
   }
 
   // ─── Create Express App ─────────────────────────────────────────────────
@@ -122,7 +130,10 @@ async function startServer() {
     wsServer = new OmnecorWebSocketServer(server);
     console.log("[Omnecor] WebSocket server attached at /ws");
   } catch (error) {
-    console.warn("[Omnecor] WebSocket server init warning:", (error as Error).message);
+    console.warn(
+      "[Omnecor] WebSocket server init warning:",
+      (error as Error).message
+    );
   }
 
   // ─── Frontend (Vite dev or static production) ───────────────────────────
@@ -137,24 +148,44 @@ async function startServer() {
   const port = await findAvailablePort(preferredPort);
 
   if (port !== preferredPort) {
-    console.log(`[Omnecor] Port ${preferredPort} is busy, using port ${port} instead`);
+    console.log(
+      `[Omnecor] Port ${preferredPort} is busy, using port ${port} instead`
+    );
   }
 
   server.listen(port, () => {
-    console.log("═══════════════════════════════════════════════════════════════");
-    console.log("  ██████╗ ███╗   ███╗███╗   ██╗███████╗ ██████╗ ██████╗ ██████╗ ");
-    console.log(" ██╔═══██╗████╗ ████║████╗  ██║██╔════╝██╔════╝██╔═══██╗██╔══██╗");
-    console.log(" ██║   ██║██╔████╔██║██╔██╗ ██║█████╗  ██║     ██║   ██║██████╔╝");
-    console.log(" ██║   ██║██║╚██╔╝██║██║╚██╗██║██╔══╝  ██║     ██║   ██║██╔══██╗");
-    console.log(" ╚██████╔╝██║ ╚═╝ ██║██║ ╚████║███████╗╚██████╗╚██████╔╝██║  ██║");
-    console.log("  ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝");
-    console.log("═══════════════════════════════════════════════════════════════");
+    console.log(
+      "═══════════════════════════════════════════════════════════════"
+    );
+    console.log(
+      "  ██████╗ ███╗   ███╗███╗   ██╗███████╗ ██████╗ ██████╗ ██████╗ "
+    );
+    console.log(
+      " ██╔═══██╗████╗ ████║████╗  ██║██╔════╝██╔════╝██╔═══██╗██╔══██╗"
+    );
+    console.log(
+      " ██║   ██║██╔████╔██║██╔██╗ ██║█████╗  ██║     ██║   ██║██████╔╝"
+    );
+    console.log(
+      " ██║   ██║██║╚██╔╝██║██║╚██╗██║██╔══╝  ██║     ██║   ██║██╔══██╗"
+    );
+    console.log(
+      " ╚██████╔╝██║ ╚═╝ ██║██║ ╚████║███████╗╚██████╗╚██████╔╝██║  ██║"
+    );
+    console.log(
+      "  ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝"
+    );
+    console.log(
+      "═══════════════════════════════════════════════════════════════"
+    );
     console.log(`  Omnecor v2.1.0 — Context-Aware AI Infrastructure (Unified)`);
     console.log(`  HTTP:      http://localhost:${port}/`);
     console.log(`  tRPC API:  http://localhost:${port}/api/trpc`);
     console.log(`  WebSocket: ws://localhost:${port}/ws`);
     console.log(`  Health:    http://localhost:${port}/health`);
-    console.log("═══════════════════════════════════════════════════════════════");
+    console.log(
+      "═══════════════════════════════════════════════════════════════"
+    );
   });
 
   // ─── Graceful Shutdown ──────────────────────────────────────────────────
@@ -176,7 +207,10 @@ async function startServer() {
       await processManager.shutdown();
       console.log("[Omnecor] ProcessManager shutdown complete");
     } catch (error) {
-      console.warn("[Omnecor] ProcessManager shutdown warning:", (error as Error).message);
+      console.warn(
+        "[Omnecor] ProcessManager shutdown warning:",
+        (error as Error).message
+      );
     }
 
     console.log("[Omnecor] Shutdown complete. Goodbye.");
@@ -188,7 +222,7 @@ async function startServer() {
 }
 
 // ─── Run ──────────────────────────────────────────────────────────────────────
-startServer().catch((error) => {
+startServer().catch(error => {
   console.error("[Omnecor] Fatal startup error:", error);
   process.exit(1);
 });

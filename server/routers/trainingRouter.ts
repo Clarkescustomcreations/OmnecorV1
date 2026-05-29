@@ -54,8 +54,10 @@ export const trainingRouter = router({
     .mutation(async ({ input }) => {
       try {
         const content = await fs.readFile(input.datasetPath, "utf-8");
-        const lines = content.split("\n").filter(line => line.trim().length > 0);
-        
+        const lines = content
+          .split("\n")
+          .filter(line => line.trim().length > 0);
+
         if (lines.length === 0) {
           throw new Error("Dataset file is empty");
         }
@@ -77,9 +79,10 @@ export const trainingRouter = router({
           totalLines: lines.length,
           validLines: validCount,
           invalidLines: invalidCount,
-          message: invalidCount === 0 
-            ? "Dataset is valid JSONL." 
-            : `Found ${invalidCount} invalid JSON lines.`,
+          message:
+            invalidCount === 0
+              ? "Dataset is valid JSONL."
+              : `Found ${invalidCount} invalid JSON lines.`,
         };
       } catch (error) {
         throw new TRPCError({
@@ -118,7 +121,10 @@ export const trainingRouter = router({
       } catch (error) {
         const message = (error as Error).message;
 
-        if (message.includes("not found") || message.includes("Security Violation")) {
+        if (
+          message.includes("not found") ||
+          message.includes("Security Violation")
+        ) {
           throw new TRPCError({
             code: "NOT_FOUND",
             message,

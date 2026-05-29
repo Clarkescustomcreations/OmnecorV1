@@ -67,7 +67,7 @@ export const voiceRouter = router({
       whisper: results[0],
       tts: results[1],
       rvc: results[2],
-      allHealthy: results.every((r) => r.isHealthy),
+      allHealthy: results.every(r => r.isHealthy),
     };
   }),
 
@@ -161,7 +161,8 @@ export const voiceRouter = router({
         if (message.includes("unreachable")) {
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "Whisper server is not running. Start it with: uvicorn whisper_server:app --port 8001",
+            message:
+              "Whisper server is not running. Start it with: uvicorn whisper_server:app --port 8001",
           });
         }
 
@@ -208,7 +209,8 @@ export const voiceRouter = router({
         if (message.includes("unreachable")) {
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "TTS server is not running. Start it with: uvicorn tts_server:app --port 8002",
+            message:
+              "TTS server is not running. Start it with: uvicorn tts_server:app --port 8002",
           });
         }
         if (message.includes(".wav")) {

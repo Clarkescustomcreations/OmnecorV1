@@ -13,13 +13,13 @@ import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc.js";
 import { observable } from "@trpc/server/observable";
 import { v4 as uuidv4 } from "uuid";
-import { 
-  createChatSession, 
-  getChatSessions, 
-  getChatSession, 
-  getChatMessages, 
-  addChatMessage, 
-  updateChatSession 
+import {
+  createChatSession,
+  getChatSessions,
+  getChatSession,
+  getChatMessages,
+  addChatMessage,
+  updateChatSession,
 } from "../db.js";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -144,22 +144,27 @@ export const aiRouter = router({
    * This handles Context Pruning by creating a dense representation of past context.
    */
   summarizeAndPruneSession: publicProcedure
-    .input(z.object({
-      sessionId: z.string().uuid(),
-      projectId: z.string().min(1),
-      providerId: z.string().min(1),
-      modelId: z.string().min(1)
-    }))
+    .input(
+      z.object({
+        sessionId: z.string().uuid(),
+        projectId: z.string().min(1),
+        providerId: z.string().min(1),
+        modelId: z.string().min(1),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const session = await getChatSession(input.sessionId);
       if (!session) throw new Error("Session not found");
 
       const messages = await getChatMessages(input.sessionId);
-      if (messages.length === 0) return { success: false, reason: "No messages to summarize" };
+      if (messages.length === 0)
+        return { success: false, reason: "No messages to summarize" };
 
       // Format messages into a script for the AI to summarize
-      const transcript = messages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
-      
+      const transcript = messages
+        .map(m => `${m.role.toUpperCase()}: ${m.content}`)
+        .join("\n\n");
+
       const summaryPrompt = `
 You are an expert archivist. Please summarize the following conversation transcript.
 Focus on the core intent, key decisions made, code changes discussed, and any outstanding tasks.
@@ -179,7 +184,9 @@ ${transcript}
 
       // Extract bullet points (Insights) vs main body if possible, or just pass full content
       const insightsMatch = summaryContent.match(/- (.*)/g);
-      const keyInsights = insightsMatch ? insightsMatch.map(i => i.replace("- ", "").trim()) : [];
+      const keyInsights = insightsMatch
+        ? insightsMatch.map(i => i.replace("- ", "").trim())
+        : [];
 
       // Consolidate to Long-Term Memory (Episodic)
       if (ctx.services.memoryArchitect.isOnline()) {
@@ -216,11 +223,17 @@ ${transcript}
   chatStream: publicProcedure
     .input(chatInputSchema)
     .subscription(({ ctx, input }) => {
-      return observable((emit) => {
-        ctx.services.aiProvider.chat(input, (chunk) => {
-          emit.next(chunk);
-          if (chunk.done) emit.complete();
-        }).catch((err) => {
+      return observable(emit => {
+        const stream = ctx.services.aiProvider.streamChat(input);
+        (async () => {
+          for await (const chunk of stream) {
+            emit.next(chunk);
+            if (chunk.done) {
+              emit.complete();
+              break;
+            }
+          }
+        })().catch(err => {
           emit.error(err);
         });
 

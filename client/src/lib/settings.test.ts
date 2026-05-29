@@ -85,7 +85,12 @@ describe("Settings Management", () => {
       settings = addKnowledgeBaseFolder(settings, "My Projects", "/path");
 
       const folderId = settings.knowledge.folders[0].id;
-      const updated = updateKnowledgeBaseFolderStats(settings, folderId, 42, 1024000);
+      const updated = updateKnowledgeBaseFolderStats(
+        settings,
+        folderId,
+        42,
+        1024000
+      );
 
       expect(updated.knowledge.folders[0].fileCount).toBe(42);
       expect(updated.knowledge.folders[0].totalSize).toBe(1024000);
@@ -154,7 +159,11 @@ describe("Settings Management", () => {
   describe("Privacy Settings", () => {
     it("should enable cloud sync", () => {
       const settings = getDefaultSettings();
-      const updated = enableCloudSync(settings, "google-drive", "/Omnecor Backup");
+      const updated = enableCloudSync(
+        settings,
+        "google-drive",
+        "/Omnecor Backup"
+      );
 
       expect(updated.privacy.cloudSyncEnabled).toBe(true);
       expect(updated.privacy.cloudSyncProvider).toBe("google-drive");
@@ -294,7 +303,7 @@ describe("Settings Management", () => {
       const settings = createMockSettings();
 
       const indexedFolders = settings.knowledge.folders.filter(
-        (f) => f.lastIndexed !== undefined
+        f => f.lastIndexed !== undefined
       );
 
       expect(indexedFolders.length).toBeGreaterThan(0);
@@ -325,7 +334,9 @@ describe("Settings Management", () => {
       // Small delay to ensure timestamp difference
       const updated = addKnowledgeBaseFolder(settings, "Folder", "/path");
 
-      expect(updated.lastUpdated.getTime()).toBeGreaterThanOrEqual(originalTime.getTime());
+      expect(updated.lastUpdated.getTime()).toBeGreaterThanOrEqual(
+        originalTime.getTime()
+      );
     });
   });
 });

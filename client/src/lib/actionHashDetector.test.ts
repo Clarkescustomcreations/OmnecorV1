@@ -13,29 +13,61 @@ import {
 describe("Action Hash Loop Detector", () => {
   describe("Hash Generation", () => {
     it("should generate consistent hashes for identical actions", () => {
-      const hash1 = generateActionHash("search", { query: "test" }, { context: "initial" });
-      const hash2 = generateActionHash("search", { query: "test" }, { context: "initial" });
+      const hash1 = generateActionHash(
+        "search",
+        { query: "test" },
+        { context: "initial" }
+      );
+      const hash2 = generateActionHash(
+        "search",
+        { query: "test" },
+        { context: "initial" }
+      );
 
       expect(hash1).toBe(hash2);
     });
 
     it("should generate different hashes for different actions", () => {
-      const hash1 = generateActionHash("search", { query: "test1" }, { context: "initial" });
-      const hash2 = generateActionHash("search", { query: "test2" }, { context: "initial" });
+      const hash1 = generateActionHash(
+        "search",
+        { query: "test1" },
+        { context: "initial" }
+      );
+      const hash2 = generateActionHash(
+        "search",
+        { query: "test2" },
+        { context: "initial" }
+      );
 
       expect(hash1).not.toBe(hash2);
     });
 
     it("should generate different hashes for different tools", () => {
-      const hash1 = generateActionHash("search", { query: "test" }, { context: "initial" });
-      const hash2 = generateActionHash("analyze", { query: "test" }, { context: "initial" });
+      const hash1 = generateActionHash(
+        "search",
+        { query: "test" },
+        { context: "initial" }
+      );
+      const hash2 = generateActionHash(
+        "analyze",
+        { query: "test" },
+        { context: "initial" }
+      );
 
       expect(hash1).not.toBe(hash2);
     });
 
     it("should generate different hashes for different state", () => {
-      const hash1 = generateActionHash("search", { query: "test" }, { context: "initial" });
-      const hash2 = generateActionHash("search", { query: "test" }, { context: "modified" });
+      const hash1 = generateActionHash(
+        "search",
+        { query: "test" },
+        { context: "initial" }
+      );
+      const hash2 = generateActionHash(
+        "search",
+        { query: "test" },
+        { context: "modified" }
+      );
 
       expect(hash1).not.toBe(hash2);
     });
@@ -58,7 +90,12 @@ describe("Action Hash Loop Detector", () => {
 
   describe("Action Record Creation", () => {
     it("should create valid action records", () => {
-      const record = createActionRecord("search", { query: "test" }, { context: "initial" }, 1);
+      const record = createActionRecord(
+        "search",
+        { query: "test" },
+        { context: "initial" },
+        1
+      );
 
       expect(record.hash).toBeDefined();
       expect(record.tool).toBe("search");
@@ -72,21 +109,46 @@ describe("Action Hash Loop Detector", () => {
   describe("Loop Detection", () => {
     it("should detect no loop with insufficient history", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
       ];
 
       const result = detectLoop(records);
 
       expect(result.isLoopDetected).toBe(false);
-      expect(result.consecutiveCount).toBe(0); // Only 2 records, need 3 for threshold
+      expect(result.consecutiveCount).toBe(2); // Only 2 records, need 3 for threshold
     });
 
     it("should detect loop with 3 identical consecutive actions", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 3),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          3
+        ),
       ];
 
       const result = detectLoop(records);
@@ -97,10 +159,30 @@ describe("Action Hash Loop Detector", () => {
 
     it("should detect loop with more than 3 identical actions", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 3),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 4),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          3
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          4
+        ),
       ];
 
       const result = detectLoop(records);
@@ -110,10 +192,30 @@ describe("Action Hash Loop Detector", () => {
 
     it("should not detect loop if sequence is broken", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
-        createActionRecord("analyze", { data: "test" }, { context: "initial" }, 3),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 4),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
+        createActionRecord(
+          "analyze",
+          { data: "test" },
+          { context: "initial" },
+          3
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          4
+        ),
       ];
 
       const result = detectLoop(records);
@@ -123,9 +225,24 @@ describe("Action Hash Loop Detector", () => {
 
     it("should return correct recommendation for loops", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 3),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          3
+        ),
       ];
 
       const result = detectLoop(records);
@@ -137,9 +254,24 @@ describe("Action Hash Loop Detector", () => {
   describe("HITL Alert Creation", () => {
     it("should create valid HITL alert", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 3),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          3
+        ),
       ];
 
       const loopDetection = detectLoop(records);
@@ -158,9 +290,24 @@ describe("Action Hash Loop Detector", () => {
   describe("HITL Alert Resolution", () => {
     it("should resolve alert with retry decision", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 3),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          3
+        ),
       ];
 
       const loopDetection = detectLoop(records);
@@ -174,9 +321,24 @@ describe("Action Hash Loop Detector", () => {
 
     it("should resolve alert with modify decision", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 3),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          3
+        ),
       ];
 
       const loopDetection = detectLoop(records);
@@ -190,9 +352,24 @@ describe("Action Hash Loop Detector", () => {
 
     it("should resolve alert with abort decision", () => {
       const records = [
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 1),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 2),
-        createActionRecord("search", { query: "test" }, { context: "initial" }, 3),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          1
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          2
+        ),
+        createActionRecord(
+          "search",
+          { query: "test" },
+          { context: "initial" },
+          3
+        ),
       ];
 
       const loopDetection = detectLoop(records);
@@ -207,7 +384,12 @@ describe("Action Hash Loop Detector", () => {
 
   describe("Action Formatting", () => {
     it("should format action for display", () => {
-      const record = createActionRecord("search", { query: "test" }, { context: "initial" }, 1);
+      const record = createActionRecord(
+        "search",
+        { query: "test" },
+        { context: "initial" },
+        1
+      );
       const formatted = formatActionForDisplay(record);
 
       expect(formatted).toContain("Tool: search");
@@ -238,7 +420,7 @@ describe("Action Hash Loop Detector", () => {
     it("should have valid mock action history", () => {
       expect(mockActionHistory.length).toBeGreaterThan(0);
 
-      mockActionHistory.forEach((record) => {
+      mockActionHistory.forEach(record => {
         expect(record.hash).toBeDefined();
         expect(record.tool).toBeDefined();
         expect(record.timestamp).toBeInstanceOf(Date);

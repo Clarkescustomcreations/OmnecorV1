@@ -4,7 +4,7 @@ import { Settings } from "lucide-react";
 
 /**
  * Settings Page
- * 
+ *
  * Comprehensive settings interface with:
  * - General preferences (theme, language, behavior)
  * - Knowledge base management (folder import, indexing)

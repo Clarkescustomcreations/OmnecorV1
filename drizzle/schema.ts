@@ -1,4 +1,12 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json } from "drizzle-orm/mysql-core";
+import {
+  int,
+  mysqlEnum,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
+  json,
+} from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -53,7 +61,13 @@ export const chatMessages = mysqlTable("chat_messages", {
   sessionId: varchar("sessionId", { length: 36 })
     .notNull()
     .references(() => chatSessions.id, { onDelete: "cascade" }),
-  role: mysqlEnum("role", ["system", "user", "assistant", "tool", "function"]).notNull(),
+  role: mysqlEnum("role", [
+    "system",
+    "user",
+    "assistant",
+    "tool",
+    "function",
+  ]).notNull(),
   content: text("content").notNull(), // text content or JSON representation of tool calls
   tokenCount: int("tokenCount"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

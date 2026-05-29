@@ -108,10 +108,12 @@ export const kicadRouter = router({
 
   /** Export PCB to 3D STEP file */
   exportSTEP: publicProcedure
-    .input(z.object({
-      inputFile: z.string().min(1),
-      outputFile: z.string().min(1),
-    }))
+    .input(
+      z.object({
+        inputFile: z.string().min(1),
+        outputFile: z.string().min(1),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       try {
         return await ctx.services.kicad.exportSTEP(input);

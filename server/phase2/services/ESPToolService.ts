@@ -128,7 +128,7 @@ export class ESPToolBridge extends EventEmitter {
    * Check if esptool is installed and accessible.
    */
   async checkInstallation(): Promise<ESPToolInfo> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const proc = spawn(this.pythonBin, ["-m", "esptool", "version"], {
         timeout: 10000,
       });
@@ -138,12 +138,16 @@ export class ESPToolBridge extends EventEmitter {
         stdout += chunk.toString();
       });
 
-      proc.on("close", (code) => {
+      proc.on("close", code => {
         if (code === 0) {
-          const versionMatch = stdout.match(/esptool\.py\s+v?(\d+\.\d+[\.\d]*)/i);
+          const versionMatch = stdout.match(
+            /esptool\.py\s+v?(\d+\.\d+[\.\d]*)/i
+          );
           resolve({
             isInstalled: true,
-            version: versionMatch ? versionMatch[1] : stdout.trim().split("\n")[0],
+            version: versionMatch
+              ? versionMatch[1]
+              : stdout.trim().split("\n")[0],
             pythonPath: this.pythonBin,
           });
         } else {
@@ -178,15 +182,19 @@ export class ESPToolBridge extends EventEmitter {
       const serialPatterns = ["ttyUSB", "ttyACM", "ttyS"];
 
       for (const entry of devEntries) {
-        if (serialPatterns.some((p) => entry.startsWith(p))) {
+        if (serialPatterns.some(p => entry.startsWith(p))) {
           const devicePath = `/dev/${entry}`;
 
           // Try to get USB device info from sysfs
           let description = `Serial port: ${entry}`;
           try {
             const sysPath = `/sys/class/tty/${entry}/device/../../`;
-            const vendor = await fs.readFile(path.join(sysPath, "idVendor"), "utf-8").catch(() => "");
-            const product = await fs.readFile(path.join(sysPath, "idProduct"), "utf-8").catch(() => "");
+            const vendor = await fs
+              .readFile(path.join(sysPath, "idVendor"), "utf-8")
+              .catch(() => "");
+            const product = await fs
+              .readFile(path.join(sysPath, "idProduct"), "utf-8")
+              .catch(() => "");
 
             if (vendor.trim() || product.trim()) {
               description = `USB Serial (${vendor.trim()}:${product.trim()})`;
@@ -204,7 +212,9 @@ export class ESPToolBridge extends EventEmitter {
         }
       }
     } catch (error) {
-      console.warn(`[Omnecor ESP] Failed to enumerate serial ports: ${(error as Error).message}`);
+      console.warn(
+        `[Omnecor ESP] Failed to enumerate serial ports: ${(error as Error).message}`
+      );
     }
 
     return ports;
@@ -226,10 +236,14 @@ export class ESPToolBridge extends EventEmitter {
       let stdout = "";
       let stderr = "";
 
-      proc.stdout?.on("data", (chunk: Buffer) => { stdout += chunk.toString(); });
-      proc.stderr?.on("data", (chunk: Buffer) => { stderr += chunk.toString(); });
+      proc.stdout?.on("data", (chunk: Buffer) => {
+        stdout += chunk.toString();
+      });
+      proc.stderr?.on("data", (chunk: Buffer) => {
+        stderr += chunk.toString();
+      });
 
-      proc.on("close", (code) => {
+      proc.on("close", code => {
         if (code === 0) {
           // Parse chip info from esptool output
           const chipMatch = stdout.match(/Chip is ([\w\s-]+)/i);
@@ -243,14 +257,18 @@ export class ESPToolBridge extends EventEmitter {
             flashSize: flashMatch ? `${flashMatch[1]}MB` : undefined,
           });
         } else {
-          reject(new Error(
-            `[Omnecor ESP] chip_id failed on ${port}: ${stderr || stdout}`
-          ));
+          reject(
+            new Error(
+              `[Omnecor ESP] chip_id failed on ${port}: ${stderr || stdout}`
+            )
+          );
         }
       });
 
-      proc.on("error", (err) => {
-        reject(new Error(`[Omnecor ESP] Failed to run esptool: ${err.message}`));
+      proc.on("error", err => {
+        reject(
+          new Error(`[Omnecor ESP] Failed to run esptool: ${err.message}`)
+        );
       });
     });
   }
@@ -279,9 +297,12 @@ export class ESPToolBridge extends EventEmitter {
       command: this.pythonBin,
       args: [
         PYTHON_SCRIPTS.espFlash,
-        "--port", port,
-        "--baud", String(baud || 921600),
-        "--firmware_path", firmwarePath,
+        "--port",
+        port,
+        "--baud",
+        String(baud || 921600),
+        "--firmware_path",
+        firmwarePath,
       ],
       label: `ESP Flash: ${path.basename(firmwarePath)} → ${port}`,
       timeoutMs: 120000, // 2 minute timeout for flashing
@@ -327,9 +348,14 @@ export class ESPToolBridge extends EventEmitter {
       type: "esp_flash",
       command: this.pythonBin,
       args: [
-        "-m", "esptool",
-        "--port", config.port,
-        "read_flash", "0", size, config.outputFile,
+        "-m",
+        "esptool",
+        "--port",
+        config.port,
+        "read_flash",
+        "0",
+        size,
+        config.outputFile,
       ],
       label: `ESP Read Flash: ${config.port} → ${path.basename(config.outputFile)}`,
       timeoutMs: 120000,
@@ -373,7 +399,9 @@ export class ESPToolBridge extends EventEmitter {
       if ((error as Error).message.includes("ENOENT")) {
         throw new Error(`[Omnecor ESP] Firmware not found: ${firmwarePath}`);
       }
-      throw new Error(`[Omnecor ESP] Invalid firmware: ${(error as Error).message}`);
+      throw new Error(
+        `[Omnecor ESP] Invalid firmware: ${(error as Error).message}`
+      );
     }
 
     // Check for valid binary extensions

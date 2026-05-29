@@ -105,7 +105,9 @@ export const projectRouter = router({
     .input(z.object({ projectId: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
       try {
-        const files = await ctx.services.fileWatcher.getFileTree(input.projectId);
+        const files = await ctx.services.fileWatcher.getFileTree(
+          input.projectId
+        );
         return { projectId: input.projectId, files, count: files.length };
       } catch (error) {
         throw new TRPCError({
@@ -156,7 +158,9 @@ export const projectRouter = router({
   getLoopDetectorState: publicProcedure
     .input(z.object({ sessionId: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
-      const snapshot = ctx.services.hashTracker.getSessionSnapshot(input.sessionId);
+      const snapshot = ctx.services.hashTracker.getSessionSnapshot(
+        input.sessionId
+      );
       if (!snapshot) {
         return { exists: false, snapshot: null };
       }

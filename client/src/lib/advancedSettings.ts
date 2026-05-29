@@ -1,13 +1,13 @@
 /**
  * Advanced Settings Manager for Omnecor
- * 
+ *
  * Manages performance tuning, resource allocation, and system-level configurations
  * including Zram/Swap buffers, model caching, context limits, and data retention policies.
  */
 
 export interface MemoryBufferConfig {
   enabled: boolean;
-  type: 'zram' | 'swap' | 'hybrid';
+  type: "zram" | "swap" | "hybrid";
   size: number; // in MB
   compressionRatio: number; // 1-3, typical 2-3 for zram
 }
@@ -15,7 +15,7 @@ export interface MemoryBufferConfig {
 export interface ModelCacheConfig {
   enabled: boolean;
   maxSize: number; // in MB
-  evictionPolicy: 'lru' | 'lfu' | 'fifo';
+  evictionPolicy: "lru" | "lfu" | "fifo";
   preloadModels: string[]; // model names to keep in cache
 }
 
@@ -23,13 +23,13 @@ export interface ContextLimitConfig {
   maxContextTokens: number;
   maxRequestTokens: number;
   autoTruncate: boolean;
-  truncationStrategy: 'recent' | 'important' | 'hybrid';
+  truncationStrategy: "recent" | "important" | "hybrid";
 }
 
 export interface DataRetentionConfig {
   retentionDays: number;
   autoCleanup: boolean;
-  cleanupFrequency: 'daily' | 'weekly' | 'monthly';
+  cleanupFrequency: "daily" | "weekly" | "monthly";
   archiveOldData: boolean;
   archivePath: string;
 }
@@ -49,7 +49,7 @@ export interface AdvancedSettings {
   dataRetention: DataRetentionConfig;
   performanceTuning: PerformanceTuningConfig;
   debugMode: boolean;
-  logLevel: 'error' | 'warn' | 'info' | 'debug';
+  logLevel: "error" | "warn" | "info" | "debug";
 }
 
 /**
@@ -58,28 +58,28 @@ export interface AdvancedSettings {
 export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
   memoryBuffer: {
     enabled: true,
-    type: 'hybrid',
+    type: "hybrid",
     size: 2048, // 2GB
     compressionRatio: 2.5,
   },
   modelCache: {
     enabled: true,
     maxSize: 5120, // 5GB
-    evictionPolicy: 'lru',
+    evictionPolicy: "lru",
     preloadModels: [],
   },
   contextLimit: {
     maxContextTokens: 8000,
     maxRequestTokens: 2000,
     autoTruncate: true,
-    truncationStrategy: 'hybrid',
+    truncationStrategy: "hybrid",
   },
   dataRetention: {
     retentionDays: 90,
     autoCleanup: true,
-    cleanupFrequency: 'weekly',
+    cleanupFrequency: "weekly",
     archiveOldData: true,
-    archivePath: '~/.omnecor/archive',
+    archivePath: "~/.omnecor/archive",
   },
   performanceTuning: {
     enableGPUAcceleration: true,
@@ -89,7 +89,7 @@ export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
     cacheTTL: 3600, // 1 hour
   },
   debugMode: false,
-  logLevel: 'warn',
+  logLevel: "warn",
 };
 
 /**
@@ -97,22 +97,85 @@ export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
  */
 export const PERFORMANCE_PRESETS = {
   lowEnd: {
-    memoryBuffer: { enabled: true, type: 'zram', size: 1024, compressionRatio: 3 },
-    modelCache: { enabled: true, maxSize: 1024, evictionPolicy: 'lfu', preloadModels: [] },
-    contextLimit: { maxContextTokens: 4000, maxRequestTokens: 1000, autoTruncate: true, truncationStrategy: 'recent' },
-    performanceTuning: { enableGPUAcceleration: false, enableParallelProcessing: false, maxParallelTasks: 1, enableResponseCaching: true, cacheTTL: 7200 },
+    memoryBuffer: {
+      enabled: true,
+      type: "zram",
+      size: 1024,
+      compressionRatio: 3,
+    },
+    modelCache: {
+      enabled: true,
+      maxSize: 1024,
+      evictionPolicy: "lfu",
+      preloadModels: [],
+    },
+    contextLimit: {
+      maxContextTokens: 4000,
+      maxRequestTokens: 1000,
+      autoTruncate: true,
+      truncationStrategy: "recent",
+    },
+    performanceTuning: {
+      enableGPUAcceleration: false,
+      enableParallelProcessing: false,
+      maxParallelTasks: 1,
+      enableResponseCaching: true,
+      cacheTTL: 7200,
+    },
   },
   midRange: {
-    memoryBuffer: { enabled: true, type: 'hybrid', size: 2048, compressionRatio: 2.5 },
-    modelCache: { enabled: true, maxSize: 5120, evictionPolicy: 'lru', preloadModels: [] },
-    contextLimit: { maxContextTokens: 8000, maxRequestTokens: 2000, autoTruncate: true, truncationStrategy: 'hybrid' },
-    performanceTuning: { enableGPUAcceleration: true, enableParallelProcessing: true, maxParallelTasks: 4, enableResponseCaching: true, cacheTTL: 3600 },
+    memoryBuffer: {
+      enabled: true,
+      type: "hybrid",
+      size: 2048,
+      compressionRatio: 2.5,
+    },
+    modelCache: {
+      enabled: true,
+      maxSize: 5120,
+      evictionPolicy: "lru",
+      preloadModels: [],
+    },
+    contextLimit: {
+      maxContextTokens: 8000,
+      maxRequestTokens: 2000,
+      autoTruncate: true,
+      truncationStrategy: "hybrid",
+    },
+    performanceTuning: {
+      enableGPUAcceleration: true,
+      enableParallelProcessing: true,
+      maxParallelTasks: 4,
+      enableResponseCaching: true,
+      cacheTTL: 3600,
+    },
   },
   highEnd: {
-    memoryBuffer: { enabled: true, type: 'swap', size: 4096, compressionRatio: 2 },
-    modelCache: { enabled: true, maxSize: 10240, evictionPolicy: 'lru', preloadModels: [] },
-    contextLimit: { maxContextTokens: 16000, maxRequestTokens: 4000, autoTruncate: false, truncationStrategy: 'hybrid' },
-    performanceTuning: { enableGPUAcceleration: true, enableParallelProcessing: true, maxParallelTasks: 8, enableResponseCaching: true, cacheTTL: 1800 },
+    memoryBuffer: {
+      enabled: true,
+      type: "swap",
+      size: 4096,
+      compressionRatio: 2,
+    },
+    modelCache: {
+      enabled: true,
+      maxSize: 10240,
+      evictionPolicy: "lru",
+      preloadModels: [],
+    },
+    contextLimit: {
+      maxContextTokens: 16000,
+      maxRequestTokens: 4000,
+      autoTruncate: false,
+      truncationStrategy: "hybrid",
+    },
+    performanceTuning: {
+      enableGPUAcceleration: true,
+      enableParallelProcessing: true,
+      maxParallelTasks: 8,
+      enableResponseCaching: true,
+      cacheTTL: 1800,
+    },
   },
 };
 
@@ -122,7 +185,7 @@ export const PERFORMANCE_PRESETS = {
 export class AdvancedSettingsManager {
   private settings: AdvancedSettings = { ...DEFAULT_ADVANCED_SETTINGS };
   private listeners: Set<(settings: AdvancedSettings) => void> = new Set();
-  private storageKey = 'omnecor-advanced-settings';
+  private storageKey = "omnecor-advanced-settings";
 
   constructor() {
     this.loadSettings();
@@ -139,7 +202,7 @@ export class AdvancedSettingsManager {
         this.settings = this.mergeSettings(DEFAULT_ADVANCED_SETTINGS, parsed);
       }
     } catch (error) {
-      console.error('Failed to load advanced settings:', error);
+      console.error("Failed to load advanced settings:", error);
       this.settings = { ...DEFAULT_ADVANCED_SETTINGS };
     }
   }
@@ -152,20 +215,26 @@ export class AdvancedSettingsManager {
       localStorage.setItem(this.storageKey, JSON.stringify(this.settings));
       this.notifyListeners();
     } catch (error) {
-      console.error('Failed to save advanced settings:', error);
+      console.error("Failed to save advanced settings:", error);
     }
   }
 
   /**
    * Merge settings with defaults
    */
-  private mergeSettings(defaults: AdvancedSettings, overrides: Partial<AdvancedSettings>): AdvancedSettings {
+  private mergeSettings(
+    defaults: AdvancedSettings,
+    overrides: Partial<AdvancedSettings>
+  ): AdvancedSettings {
     return {
       memoryBuffer: { ...defaults.memoryBuffer, ...overrides.memoryBuffer },
       modelCache: { ...defaults.modelCache, ...overrides.modelCache },
       contextLimit: { ...defaults.contextLimit, ...overrides.contextLimit },
       dataRetention: { ...defaults.dataRetention, ...overrides.dataRetention },
-      performanceTuning: { ...defaults.performanceTuning, ...overrides.performanceTuning },
+      performanceTuning: {
+        ...defaults.performanceTuning,
+        ...overrides.performanceTuning,
+      },
       debugMode: overrides.debugMode ?? defaults.debugMode,
       logLevel: overrides.logLevel ?? defaults.logLevel,
     };
@@ -189,7 +258,7 @@ export class AdvancedSettingsManager {
   /**
    * Apply a performance preset
    */
-  applyPreset(preset: 'lowEnd' | 'midRange' | 'highEnd') {
+  applyPreset(preset: "lowEnd" | "midRange" | "highEnd") {
     const presetSettings = PERFORMANCE_PRESETS[preset];
     this.updateSettings(presetSettings as Partial<AdvancedSettings>);
   }
@@ -214,7 +283,7 @@ export class AdvancedSettingsManager {
    * Notify listeners
    */
   private notifyListeners() {
-    this.listeners.forEach((listener) => listener(this.getSettings()));
+    this.listeners.forEach(listener => listener(this.getSettings()));
   }
 
   /**
@@ -233,7 +302,8 @@ export class AdvancedSettingsManager {
     bufferMemory: number;
     totalMemory: number;
   } {
-    const contextMemory = (this.settings.contextLimit.maxContextTokens * 0.5) / 1024; // Rough estimate: ~0.5KB per token
+    const contextMemory =
+      (this.settings.contextLimit.maxContextTokens * 0.5) / 1024; // Rough estimate: ~0.5KB per token
     const cacheMemory = this.settings.modelCache.maxSize;
     const bufferMemory = this.settings.memoryBuffer.size;
     const totalMemory = contextMemory + cacheMemory + bufferMemory;
@@ -248,23 +318,26 @@ export class AdvancedSettingsManager {
     const errors: string[] = [];
 
     if (this.settings.contextLimit.maxContextTokens < 1000) {
-      errors.push('Max context tokens should be at least 1000');
+      errors.push("Max context tokens should be at least 1000");
     }
 
-    if (this.settings.contextLimit.maxRequestTokens > this.settings.contextLimit.maxContextTokens) {
-      errors.push('Max request tokens cannot exceed max context tokens');
+    if (
+      this.settings.contextLimit.maxRequestTokens >
+      this.settings.contextLimit.maxContextTokens
+    ) {
+      errors.push("Max request tokens cannot exceed max context tokens");
     }
 
     if (this.settings.modelCache.maxSize < 512) {
-      errors.push('Model cache size should be at least 512MB');
+      errors.push("Model cache size should be at least 512MB");
     }
 
     if (this.settings.dataRetention.retentionDays < 1) {
-      errors.push('Retention days must be at least 1');
+      errors.push("Retention days must be at least 1");
     }
 
     if (this.settings.performanceTuning.maxParallelTasks < 1) {
-      errors.push('Max parallel tasks must be at least 1');
+      errors.push("Max parallel tasks must be at least 1");
     }
 
     return {
@@ -288,13 +361,13 @@ export class AdvancedSettingsManager {
       const parsed = JSON.parse(json);
       const validation = this.validateSettings();
       if (!validation.valid) {
-        console.error('Invalid settings:', validation.errors);
+        console.error("Invalid settings:", validation.errors);
         return false;
       }
       this.updateSettings(parsed);
       return true;
     } catch (error) {
-      console.error('Failed to import settings:', error);
+      console.error("Failed to import settings:", error);
       return false;
     }
   }
@@ -307,7 +380,7 @@ export class AdvancedSettingsManager {
     const sizeMB = config.size;
     const sizeGB = (sizeMB / 1024).toFixed(1);
 
-    if (config.type === 'zram') {
+    if (config.type === "zram") {
       return `
 # Enable Zram buffer (${sizeGB}GB)
 sudo modprobe zram
@@ -315,7 +388,7 @@ echo ${sizeMB}M | sudo tee /sys/block/zram0/disksize
 sudo mkswap /dev/zram0
 sudo swapon /dev/zram0
       `.trim();
-    } else if (config.type === 'swap') {
+    } else if (config.type === "swap") {
       return `
 # Create swap file (${sizeGB}GB)
 sudo fallocate -l ${sizeGB}G /swapfile
@@ -342,7 +415,9 @@ export const advancedSettings = new AdvancedSettingsManager();
  * React hook for using advanced settings
  */
 export function useAdvancedSettings() {
-  const [settings, setSettings] = React.useState<AdvancedSettings>(advancedSettings.getSettings());
+  const [settings, setSettings] = React.useState<AdvancedSettings>(
+    advancedSettings.getSettings()
+  );
 
   React.useEffect(() => {
     return advancedSettings.subscribe(setSettings);
@@ -353,10 +428,11 @@ export function useAdvancedSettings() {
     updateSettings: advancedSettings.updateSettings.bind(advancedSettings),
     applyPreset: advancedSettings.applyPreset.bind(advancedSettings),
     resetToDefaults: advancedSettings.resetToDefaults.bind(advancedSettings),
-    estimateMemoryUsage: advancedSettings.estimateMemoryUsage.bind(advancedSettings),
+    estimateMemoryUsage:
+      advancedSettings.estimateMemoryUsage.bind(advancedSettings),
     validateSettings: advancedSettings.validateSettings.bind(advancedSettings),
   };
 }
 
 // Import React for the hook
-import React from 'react';
+import React from "react";

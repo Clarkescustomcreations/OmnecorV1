@@ -16,9 +16,11 @@ const ALLOWED_DIRECTORIES = [
  */
 export async function validatePath(filePath: string): Promise<string> {
   const resolvedPath = path.resolve(filePath);
-  
-  const isAllowed = ALLOWED_DIRECTORIES.some(dir => resolvedPath.startsWith(path.resolve(dir)));
-  
+
+  const isAllowed = ALLOWED_DIRECTORIES.some(dir =>
+    resolvedPath.startsWith(path.resolve(dir))
+  );
+
   if (!isAllowed) {
     throw new Error(`Security Violation: Path ${filePath} is not allowed.`);
   }

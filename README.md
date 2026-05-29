@@ -1,4 +1,5 @@
-# 👁️ Omnecor 
+# 👁️ Omnecor
+
 > **Context-Aware AI Infrastructure.**
 
 **Omnecor** is the premier **Human-Machine Collaboration Interface (HMCI)**. Designed as the central nervous system for your digital and physical workflow, Omnecor unites software development, business automation, media generation, and hardware engineering under one unified, intelligent, and production-ready workspace.
@@ -6,21 +7,27 @@
 ## ✨ Core Capabilities
 
 ### 🚦 The Unified AI Orchestrator
+
 At the heart of Omnecor is a high-performance orchestration layer. It analyzes your prompts in real-time and routes them to the ideal model—optimizing for performance, cost, and task-specific capabilities across local models and cloud providers.
 
 ### 🔗 Service-Oriented Backend
+
 Omnecor features a unified, production-capable Express/tRPC backend. This centralized architecture ensures real-time synchronization across your entire workspace, providing robust state management for complex AI-driven workflows.
 
 ### 🧠 Distributed Mesh Infrastructure
+
 Omnecor visualizes your workflow by generating dynamic, interactive neural networks for your data. Build custom, isolated "neural workspaces" for every individual project. Watch in real-time as your AI agents map out files, connect research documents, and build semantic memory contexts.
 
 ### 🤖 The Multi-Modal Workforce
+
 Leverage specialized autonomous agents that collaborate natively:
+
 - **Software & Web:** Agents read your local codebase, write applications, and handle deployment.
 - **Media Studio:** Node-based generation for images, video, and voice cloning.
 - **Hardware Integration Layer:** Bridge the gap to the physical world with integrated Blender 3D modeling and KiCad PCB routing.
 
 ## ⚙️ Execution Environments
+
 Omnecor adapts to your specific hardware needs:
 
 1. **Hybrid Orchestration**: Leverage local compute for UI/orchestration, while offloading heavy tasks to authorized cloud providers.

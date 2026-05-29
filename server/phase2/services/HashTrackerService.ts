@@ -132,7 +132,7 @@ class LoopDetector {
       return false;
     }
     const tail = this.history.slice(-(this.loopThreshold - 1));
-    return tail.every((entry) => entry.hash === hash);
+    return tail.every(entry => entry.hash === hash);
   }
 
   /** Append hash to the rolling history (FIFO ring-buffer) */
@@ -158,7 +158,7 @@ class LoopDetector {
   /** Read-only snapshot of current state */
   snapshot(): LoopDetectorSnapshot {
     return {
-      history: this.history.map((e) => ({ ...e })),
+      history: this.history.map(e => ({ ...e })),
       maxHistorySize: this.maxHistorySize,
       loopThreshold: this.loopThreshold,
     };

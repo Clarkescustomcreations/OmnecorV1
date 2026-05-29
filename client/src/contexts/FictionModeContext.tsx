@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface FictionModeContextType {
   isFictionMode: boolean;
@@ -6,16 +6,22 @@ interface FictionModeContextType {
   setFictionMode: (enabled: boolean) => void;
 }
 
-const FictionModeContext = createContext<FictionModeContextType | undefined>(undefined);
+const FictionModeContext = createContext<FictionModeContextType | undefined>(
+  undefined
+);
 
-export const FictionModeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const FictionModeProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [isFictionMode, setIsFictionMode] = useState(false);
 
   const toggleFictionMode = () => setIsFictionMode(prev => !prev);
   const setFictionMode = (enabled: boolean) => setIsFictionMode(enabled);
 
   return (
-    <FictionModeContext.Provider value={{ isFictionMode, toggleFictionMode, setFictionMode }}>
+    <FictionModeContext.Provider
+      value={{ isFictionMode, toggleFictionMode, setFictionMode }}
+    >
       {children}
     </FictionModeContext.Provider>
   );
@@ -24,7 +30,7 @@ export const FictionModeProvider: React.FC<{ children: ReactNode }> = ({ childre
 export const useFictionMode = () => {
   const context = useContext(FictionModeContext);
   if (context === undefined) {
-    throw new Error('useFictionMode must be used within a FictionModeProvider');
+    throw new Error("useFictionMode must be used within a FictionModeProvider");
   }
   return context;
 };

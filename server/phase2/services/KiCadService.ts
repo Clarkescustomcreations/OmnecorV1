@@ -46,7 +46,13 @@ export interface KiCadInfo {
 export type SchematicExportFormat = "pdf" | "svg" | "dxf" | "hpgl" | "ps";
 
 /** Export format options for PCB */
-export type PCBExportFormat = "gerber" | "drill" | "svg" | "pdf" | "step" | "vrml";
+export type PCBExportFormat =
+  | "gerber"
+  | "drill"
+  | "svg"
+  | "pdf"
+  | "step"
+  | "vrml";
 
 /** DRC/ERC check result */
 export interface CheckResult {
@@ -132,7 +138,7 @@ export class KiCadBridge extends EventEmitter {
    * Check if KiCad CLI is installed and accessible.
    */
   async checkInstallation(): Promise<KiCadInfo> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const proc = spawn(this.cliPath, ["version"], { timeout: 10000 });
 
       let stdout = "";
@@ -140,7 +146,7 @@ export class KiCadBridge extends EventEmitter {
         stdout += chunk.toString();
       });
 
-      proc.on("close", (code) => {
+      proc.on("close", code => {
         if (code === 0 && stdout) {
           const versionMatch = stdout.match(/(\d+\.\d+[\.\d]*)/);
           resolve({
@@ -281,7 +287,14 @@ export class KiCadBridge extends EventEmitter {
   }): Promise<KiCadJobResult> {
     await this.validateKiCadFile(config.inputFile, [".kicad_pcb"]);
 
-    const args = ["pcb", "export", "step", config.inputFile, "-o", config.outputFile];
+    const args = [
+      "pcb",
+      "export",
+      "step",
+      config.inputFile,
+      "-o",
+      config.outputFile,
+    ];
 
     return this.runCommand(args, "Export STEP");
   }
@@ -316,9 +329,12 @@ export class KiCadBridge extends EventEmitter {
     await this.validateKiCadFile(config.inputFile, [".kicad_pcb"]);
 
     const args = [
-      "pcb", "export", "svg",
+      "pcb",
+      "export",
+      "svg",
       config.inputFile,
-      "-o", config.outputFile,
+      "-o",
+      config.outputFile,
     ];
 
     if (config.layers && config.layers.length > 0) {
@@ -344,10 +360,14 @@ export class KiCadBridge extends EventEmitter {
 
     const format = config.format || "csv";
     const args = [
-      "sch", "export", "bom",
+      "sch",
+      "export",
+      "bom",
       config.inputFile,
-      "-o", config.outputFile,
-      "--format", format,
+      "-o",
+      config.outputFile,
+      "--format",
+      format,
     ];
 
     return this.runCommand(args, "Generate BOM");
@@ -358,10 +378,13 @@ export class KiCadBridge extends EventEmitter {
   // -------------------------------------------------------------------------
 
   /** Run a kicad-cli command and capture output */
-  private async runCommand(args: string[], label: string): Promise<KiCadJobResult> {
+  private async runCommand(
+    args: string[],
+    label: string
+  ): Promise<KiCadJobResult> {
     const startTime = Date.now();
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const proc = spawn(this.cliPath, args, {
         timeout: 120000, // 2 minute timeout
       });
@@ -377,12 +400,14 @@ export class KiCadBridge extends EventEmitter {
         stderr += chunk.toString();
       });
 
-      proc.on("close", (code) => {
+      proc.on("close", code => {
         const durationMs = Date.now() - startTime;
 
         // Collect output files (parse from stdout if available)
         const outputFiles: string[] = [];
-        const fileMatches = stdout.match(/(?:Writing|Saved|Output).*?['"]?([/\w.-]+\.\w+)['"]?/gi);
+        const fileMatches = stdout.match(
+          /(?:Writing|Saved|Output).*?['"]?([/\w.-]+\.\w+)['"]?/gi
+        );
         if (fileMatches) {
           for (const match of fileMatches) {
             const pathMatch = match.match(/([/\w.-]+\.\w+)/);
@@ -401,7 +426,7 @@ export class KiCadBridge extends EventEmitter {
         });
       });
 
-      proc.on("error", (err) => {
+      proc.on("error", err => {
         resolve({
           success: false,
           command: `${this.cliPath} ${args.join(" ")}`,
@@ -416,7 +441,10 @@ export class KiCadBridge extends EventEmitter {
   }
 
   /** Validate a KiCad file path */
-  private async validateKiCadFile(filePath: string, allowedExtensions: string[]): Promise<void> {
+  private async validateKiCadFile(
+    filePath: string,
+    allowedExtensions: string[]
+  ): Promise<void> {
     const ext = path.extname(filePath).toLowerCase();
     if (!allowedExtensions.includes(ext)) {
       throw new Error(
@@ -459,8 +487,11 @@ export class KiCadBridge extends EventEmitter {
 
         violations.push({
           severity,
-          message: violation.description || violation.message || "Unknown violation",
-          location: violation.pos ? `${violation.pos.x},${violation.pos.y}` : undefined,
+          message:
+            violation.description || violation.message || "Unknown violation",
+          location: violation.pos
+            ? `${violation.pos.x},${violation.pos.y}`
+            : undefined,
         });
       }
 

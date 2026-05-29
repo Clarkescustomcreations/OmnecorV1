@@ -1,10 +1,10 @@
-import { ChromaClient, Collection } from 'chromadb';
+import { ChromaClient, Collection } from "chromadb";
 
 export class VectorDBService {
   private static instance: VectorDBService | null = null;
   private client: ChromaClient | null = null;
   private isInitialized: boolean = false;
-  private readonly chromaUrl: string = 'http://localhost:8000';
+  private readonly chromaUrl: string = "http://localhost:8000";
 
   private constructor() {}
 
@@ -29,18 +29,20 @@ export class VectorDBService {
 
     try {
       this.client = new ChromaClient({ path: this.chromaUrl });
-      
+
       // Perform a heartbeat check to verify the ChromaDB container is up and running
       await this.client.heartbeat();
-      
+
       this.isInitialized = true;
-      console.log(`[Omnecor VectorDB] Successfully connected to ChromaDB at ${this.chromaUrl}`);
+      console.log(
+        `[Omnecor VectorDB] Successfully connected to ChromaDB at ${this.chromaUrl}`
+      );
     } catch (error) {
       this.isInitialized = false;
       this.client = null;
       throw new Error(
         `[Omnecor VectorDB Visual Failure] Could not connect to ChromaDB at ${this.chromaUrl}. ` +
-        `Ensure your ChromaDB Docker container is running and healthy. Details: ${(error as Error).message}`
+          `Ensure your ChromaDB Docker container is running and healthy. Details: ${(error as Error).message}`
       );
     }
   }
@@ -50,7 +52,9 @@ export class VectorDBService {
    */
   private ensureInitialized(): ChromaClient {
     if (!this.isInitialized || !this.client) {
-      throw new Error('[Omnecor VectorDB] Service not initialized. Call init() before performing operations.');
+      throw new Error(
+        "[Omnecor VectorDB] Service not initialized. Call init() before performing operations."
+      );
     }
     return this.client;
   }
@@ -65,7 +69,9 @@ export class VectorDBService {
         name: name,
       });
     } catch (error) {
-      throw new Error(`[Omnecor VectorDB] Failed to get or create collection '${name}': ${(error as Error).message}`);
+      throw new Error(
+        `[Omnecor VectorDB] Failed to get or create collection '${name}': ${(error as Error).message}`
+      );
     }
   }
 
@@ -75,7 +81,11 @@ export class VectorDBService {
    */
   public async addDocuments(
     collectionName: string,
-    documents: Array<{ id: string; text: string; metadata: Record<string, any> }>
+    documents: Array<{
+      id: string;
+      text: string;
+      metadata: Record<string, any>;
+    }>
   ): Promise<void> {
     const collection = await this.getOrCreateCollection(collectionName);
 
@@ -97,10 +107,14 @@ export class VectorDBService {
         metadatas,
         documents: documentsText,
       });
-      
-      console.log(`[Omnecor VectorDB] Successfully ingested ${documents.length} document(s) into '${collectionName}'`);
+
+      console.log(
+        `[Omnecor VectorDB] Successfully ingested ${documents.length} document(s) into '${collectionName}'`
+      );
     } catch (error) {
-      throw new Error(`[Omnecor VectorDB] Batch ingestion failed for collection '${collectionName}': ${(error as Error).message}`);
+      throw new Error(
+        `[Omnecor VectorDB] Batch ingestion failed for collection '${collectionName}': ${(error as Error).message}`
+      );
     }
   }
 
@@ -112,7 +126,14 @@ export class VectorDBService {
     collectionName: string,
     query: string,
     limit: number = 5
-  ): Promise<Array<{ id: string; text: string | null; metadata: Record<string, any> | null; distance: number | null }>> {
+  ): Promise<
+    Array<{
+      id: string;
+      text: string | null;
+      metadata: Record<string, any> | null;
+      distance: number | null;
+    }>
+  > {
     const collection = await this.getOrCreateCollection(collectionName);
 
     try {
@@ -133,16 +154,27 @@ export class VectorDBService {
         for (let i = 0; i < results.ids[0].length; i++) {
           formattedResults.push({
             id: results.ids[0][i],
-            text: results.documents && results.documents[0] ? results.documents[0][i] : null,
-            metadata: results.metadatas && results.metadatas[0] ? results.metadatas[0][i] : null,
-            distance: results.distances && results.distances[0] ? results.distances[0][i] : null,
+            text:
+              results.documents && results.documents[0]
+                ? results.documents[0][i]
+                : null,
+            metadata:
+              results.metadatas && results.metadatas[0]
+                ? results.metadatas[0][i]
+                : null,
+            distance:
+              results.distances && results.distances[0]
+                ? results.distances[0][i]
+                : null,
           });
         }
       }
 
       return formattedResults;
     } catch (error) {
-      throw new Error(`[Omnecor VectorDB] Query failed on collection '${collectionName}': ${(error as Error).message}`);
+      throw new Error(
+        `[Omnecor VectorDB] Query failed on collection '${collectionName}': ${(error as Error).message}`
+      );
     }
   }
 }

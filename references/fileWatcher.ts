@@ -151,7 +151,7 @@ export class FileSystemWatcher extends EventEmitter {
     this.watcher = chokidar.watch(this.rootDir, {
       ignored: this.options.ignored,
       persistent: true,
-      ignoreInitial: false,         // emit 'add' for existing files on start
+      ignoreInitial: false, // emit 'add' for existing files on start
       followSymlinks: false,
       depth: this.options.recursive ? undefined : 0,
       awaitWriteFinish: {
@@ -163,14 +163,16 @@ export class FileSystemWatcher extends EventEmitter {
     });
 
     // --- forwarded events ---------------------------------------------------
-    this.watcher.on("add",        (p) => this.debounce("add",       p));
-    this.watcher.on("change",     (p) => this.debounce("change",    p));
-    this.watcher.on("unlink",     (p) => this.debounce("unlink",    p));
-    this.watcher.on("unlinkDir",  (p) => this.debounce("unlinkDir", p));
+    this.watcher.on("add", p => this.debounce("add", p));
+    this.watcher.on("change", p => this.debounce("change", p));
+    this.watcher.on("unlink", p => this.debounce("unlink", p));
+    this.watcher.on("unlinkDir", p => this.debounce("unlinkDir", p));
 
     // --- pass-through events ------------------------------------------------
     this.watcher.on("ready", () => this.emit("ready"));
-    this.watcher.on("error", (err) => this.emit("error", err instanceof Error ? err : new Error(String(err))));
+    this.watcher.on("error", err =>
+      this.emit("error", err instanceof Error ? err : new Error(String(err)))
+    );
   }
 
   /**

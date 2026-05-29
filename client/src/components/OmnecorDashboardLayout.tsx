@@ -27,7 +27,7 @@ interface OmnecorDashboardLayoutProps {
 
 /**
  * Omnecor Dashboard Layout Component
- * 
+ *
  * Provides a dark-themed, refined sidebar navigation with the following sections:
  * - Chat: AI conversation interface
  * - Neural Brain Map: Spatial project organization with node-based visualization
@@ -35,14 +35,16 @@ interface OmnecorDashboardLayoutProps {
  * - Project Pipelines: Multi-step workflow orchestration
  * - Integrations: Third-party app connections
  * - Settings: Configuration and knowledge base management
- * 
+ *
  * Features:
  * - Collapsible sidebar for mobile responsiveness
  * - Active route highlighting
  * - User profile and logout button
  * - Refined OKLCH color palette
  */
-export default function OmnecorDashboardLayout({ children }: OmnecorDashboardLayoutProps) {
+export default function OmnecorDashboardLayout({
+  children,
+}: OmnecorDashboardLayoutProps) {
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { user, logout } = useAuth();
@@ -105,7 +107,9 @@ export default function OmnecorDashboardLayout({ children }: OmnecorDashboardLay
               <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
                 <Brain className="w-5 h-5 text-accent-foreground" />
               </div>
-              <h1 className="text-xl font-bold text-sidebar-foreground">Omnecor</h1>
+              <h1 className="text-xl font-bold text-sidebar-foreground">
+                Omnecor
+              </h1>
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
@@ -119,7 +123,7 @@ export default function OmnecorDashboardLayout({ children }: OmnecorDashboardLay
           {/* Navigation Items */}
           <ScrollArea className="flex-1 px-3 py-4">
             <nav className="space-y-2">
-              {navItems.map((item) => {
+              {navItems.map(item => {
                 const Icon = item.icon;
                 const active = isActive(item.href);
                 return (
@@ -150,7 +154,9 @@ export default function OmnecorDashboardLayout({ children }: OmnecorDashboardLay
           <div className="border-t border-sidebar-border p-4 space-y-3">
             {user && (
               <div className="px-3 py-2 rounded-lg bg-sidebar-hover">
-                <p className="text-xs text-sidebar-foreground/70">Logged in as</p>
+                <p className="text-xs text-sidebar-foreground/70">
+                  Logged in as
+                </p>
                 <p className="text-sm font-medium text-sidebar-foreground truncate">
                   {user.name || user.email || "User"}
                 </p>
@@ -181,12 +187,15 @@ export default function OmnecorDashboardLayout({ children }: OmnecorDashboardLay
             <Menu className="w-6 h-6" />
           </button>
           <div className="flex-1" />
-          
+
           <Button
             variant={isFictionMode ? "default" : "outline"}
             size="sm"
             onClick={toggleFictionMode}
-            className={cn("gap-2", isFictionMode && "bg-accent text-accent-foreground")}
+            className={cn(
+              "gap-2",
+              isFictionMode && "bg-accent text-accent-foreground"
+            )}
             title="Toggle Fiction Mode"
           >
             {isFictionMode ? (
@@ -201,7 +210,7 @@ export default function OmnecorDashboardLayout({ children }: OmnecorDashboardLay
         {/* Content Area */}
         <main className="flex-1 overflow-auto relative">
           <div className="h-full">{children}</div>
-          
+
           {/* Global Floating Alerts */}
           <div className="fixed bottom-6 right-6 z-[100] w-full max-w-md pointer-events-none">
             <div className="pointer-events-auto">

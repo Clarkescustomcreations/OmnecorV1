@@ -98,7 +98,9 @@ describe("Chat & Context Library", () => {
       const message = createChatMessage("user", "Hello");
       const updated = addMessageToConversation(conversation, message);
 
-      expect(updated.updatedAt.getTime()).toBeGreaterThanOrEqual(initialTime.getTime());
+      expect(updated.updatedAt.getTime()).toBeGreaterThanOrEqual(
+        initialTime.getTime()
+      );
     });
   });
 
@@ -161,7 +163,11 @@ describe("Chat & Context Library", () => {
       const message = createChatMessage("user", "Hello");
       conversation = addMessageToConversation(conversation, message);
 
-      const transparency = calculateContextTransparency(conversation, 8192, 500);
+      const transparency = calculateContextTransparency(
+        conversation,
+        8192,
+        500
+      );
 
       expect(transparency.totalTokens).toBeGreaterThan(0);
       expect(transparency.maxTokens).toBe(8192);
@@ -182,7 +188,9 @@ describe("Chat & Context Library", () => {
 
       // Only included file tokens should be counted
       expect(transparency.totalTokens).toBeGreaterThan(500); // system prompt
-      expect(transparency.totalTokens).toBeLessThan(500 + includedFile.tokens + excludedFile.tokens);
+      expect(transparency.totalTokens).toBeLessThan(
+        500 + includedFile.tokens + excludedFile.tokens
+      );
     });
 
     it("should handle max token limit", () => {
@@ -202,33 +210,33 @@ describe("Chat & Context Library", () => {
     it("should get included files", () => {
       let conversation = createConversation("Test", "gpt-4");
 
-      mockContextFiles.forEach((file) => {
+      mockContextFiles.forEach(file => {
         conversation = addFileToContext(conversation, file);
       });
 
       const includedFiles = getIncludedFiles(conversation);
 
       expect(includedFiles.length).toBeGreaterThan(0);
-      expect(includedFiles.every((f) => f.included)).toBe(true);
+      expect(includedFiles.every(f => f.included)).toBe(true);
     });
 
     it("should get excluded files", () => {
       let conversation = createConversation("Test", "gpt-4");
 
-      mockContextFiles.forEach((file) => {
+      mockContextFiles.forEach(file => {
         conversation = addFileToContext(conversation, file);
       });
 
       const excludedFiles = getExcludedFiles(conversation);
 
       expect(excludedFiles.length).toBeGreaterThan(0);
-      expect(excludedFiles.every((f) => !f.included)).toBe(true);
+      expect(excludedFiles.every(f => !f.included)).toBe(true);
     });
   });
 
   describe("Mock Data", () => {
     it("should have valid mock context files", () => {
-      mockContextFiles.forEach((file) => {
+      mockContextFiles.forEach(file => {
         expect(file.id).toBeDefined();
         expect(file.path).toBeDefined();
         expect(file.name).toBeDefined();
@@ -253,8 +261,10 @@ describe("Chat & Context Library", () => {
     it("should have correct message roles in mock conversation", () => {
       const conversation = createMockConversation();
 
-      const userMessages = conversation.messages.filter((m) => m.role === "user");
-      const assistantMessages = conversation.messages.filter((m) => m.role === "assistant");
+      const userMessages = conversation.messages.filter(m => m.role === "user");
+      const assistantMessages = conversation.messages.filter(
+        m => m.role === "assistant"
+      );
 
       expect(userMessages.length).toBeGreaterThan(0);
       expect(assistantMessages.length).toBeGreaterThan(0);

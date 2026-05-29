@@ -1,17 +1,17 @@
 /**
  * Application Preferences Manager for Omnecor
- * 
+ *
  * Manages user preferences including theme, language, and UI settings.
  * Persists preferences to localStorage and provides reactive updates.
  */
 
-export type Theme = 'dark' | 'light' | 'system';
-export type Language = 'en' | 'es' | 'fr' | 'de' | 'ja' | 'zh';
+export type Theme = "dark" | "light" | "system";
+export type Language = "en" | "es" | "fr" | "de" | "ja" | "zh";
 
 export interface AppPreferences {
   theme: Theme;
   language: Language;
-  fontSize: 'small' | 'normal' | 'large';
+  fontSize: "small" | "normal" | "large";
   compactMode: boolean;
   autoSave: boolean;
   autoSaveInterval: number; // milliseconds
@@ -28,9 +28,9 @@ export interface AppPreferences {
 }
 
 export const DEFAULT_PREFERENCES: AppPreferences = {
-  theme: 'dark',
-  language: 'en',
-  fontSize: 'normal',
+  theme: "dark",
+  language: "en",
+  fontSize: "normal",
   compactMode: false,
   autoSave: true,
   autoSaveInterval: 30000, // 30 seconds
@@ -38,8 +38,8 @@ export const DEFAULT_PREFERENCES: AppPreferences = {
   soundEnabled: false,
   animationsEnabled: true,
   keyboardShortcutsEnabled: true,
-  defaultModel: 'gpt-4',
-  defaultProvider: 'openai',
+  defaultModel: "gpt-4",
+  defaultProvider: "openai",
   contextSizeLimit: 8000,
   maxTokensPerRequest: 2000,
   temperatureDefault: 0.7,
@@ -53,7 +53,7 @@ export const DEFAULT_PREFERENCES: AppPreferences = {
 export class AppPreferencesManager {
   private preferences: AppPreferences = { ...DEFAULT_PREFERENCES };
   private listeners: Set<(prefs: AppPreferences) => void> = new Set();
-  private storageKey = 'omnecor-app-preferences';
+  private storageKey = "omnecor-app-preferences";
 
   constructor() {
     this.loadPreferences();
@@ -70,7 +70,7 @@ export class AppPreferencesManager {
         this.preferences = { ...DEFAULT_PREFERENCES, ...parsed };
       }
     } catch (error) {
-      console.error('Failed to load preferences:', error);
+      console.error("Failed to load preferences:", error);
       this.preferences = { ...DEFAULT_PREFERENCES };
     }
   }
@@ -83,7 +83,7 @@ export class AppPreferencesManager {
       localStorage.setItem(this.storageKey, JSON.stringify(this.preferences));
       this.notifyListeners();
     } catch (error) {
-      console.error('Failed to save preferences:', error);
+      console.error("Failed to save preferences:", error);
     }
   }
 
@@ -97,7 +97,10 @@ export class AppPreferencesManager {
   /**
    * Update a single preference
    */
-  updatePreference<K extends keyof AppPreferences>(key: K, value: AppPreferences[K]) {
+  updatePreference<K extends keyof AppPreferences>(
+    key: K,
+    value: AppPreferences[K]
+  ) {
     this.preferences[key] = value;
     this.savePreferences();
   }
@@ -130,7 +133,7 @@ export class AppPreferencesManager {
    * Notify all listeners of changes
    */
   private notifyListeners() {
-    this.listeners.forEach((listener) => listener(this.getPreferences()));
+    this.listeners.forEach(listener => listener(this.getPreferences()));
   }
 
   /**
@@ -150,7 +153,7 @@ export class AppPreferencesManager {
       this.savePreferences();
       return true;
     } catch (error) {
-      console.error('Failed to import preferences:', error);
+      console.error("Failed to import preferences:", error);
       return false;
     }
   }
@@ -182,4 +185,4 @@ export function useAppPreferences() {
 }
 
 // Import React for the hook
-import React from 'react';
+import React from "react";

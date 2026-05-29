@@ -1,5 +1,5 @@
-import { EventEmitter } from 'events';
-import { ENV } from '../config/index.js';
+import { EventEmitter } from "events";
+import { ENV } from "../../_core/env.js";
 
 export interface MeshNode {
   id: string;

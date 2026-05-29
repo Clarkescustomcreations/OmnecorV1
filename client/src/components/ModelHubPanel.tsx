@@ -1,5 +1,11 @@
 import { useState, useMemo } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -36,7 +42,7 @@ interface ModelHubPanelProps {
 
 /**
  * Model Hub Panel Component
- * 
+ *
  * Displays local and API models with marketplace for downloading new models.
  * Features:
  * - Local model management (Ollama, Llama.cpp)
@@ -52,21 +58,26 @@ export default function ModelHubPanel({
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "local" | "api">("all");
-  const [activeTab, setActiveTab] = useState<"models" | "marketplace">("models");
+  const [activeTab, setActiveTab] = useState<"models" | "marketplace">(
+    "models"
+  );
 
-  const allModels = useMemo(() => getAllModels(selectedModelId || undefined), [selectedModelId]);
+  const allModels = useMemo(
+    () => getAllModels(selectedModelId || undefined),
+    [selectedModelId]
+  );
 
   const filteredModels = useMemo(() => {
     let models = allModels;
 
     if (filterType !== "all") {
-      models = models.filter((m) => m.type === filterType);
+      models = models.filter(m => m.type === filterType);
     }
 
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       models = models.filter(
-        (m) =>
+        m =>
           m.name.toLowerCase().includes(query) ||
           m.displayName.toLowerCase().includes(query) ||
           m.description?.toLowerCase().includes(query)
@@ -81,10 +92,10 @@ export default function ModelHubPanel({
 
     const query = searchQuery.toLowerCase();
     return mockMarketplaceModels.filter(
-      (m) =>
+      m =>
         m.name.toLowerCase().includes(query) ||
         m.description.toLowerCase().includes(query) ||
-        m.tags.some((t) => t.toLowerCase().includes(query))
+        m.tags.some(t => t.toLowerCase().includes(query))
     );
   }, [searchQuery]);
 
@@ -130,11 +141,14 @@ export default function ModelHubPanel({
           <Input
             placeholder="Search models..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="pl-10"
           />
         </div>
-        <Select value={filterType} onValueChange={(value: any) => setFilterType(value)}>
+        <Select
+          value={filterType}
+          onValueChange={(value: any) => setFilterType(value)}
+        >
           <SelectTrigger className="w-32">
             <SelectValue />
           </SelectTrigger>
@@ -183,7 +197,7 @@ export default function ModelHubPanel({
                 <p>No models found</p>
               </div>
             ) : (
-              filteredModels.map((model) => (
+              filteredModels.map(model => (
                 <Card
                   key={model.id}
                   className={cn(
@@ -196,7 +210,9 @@ export default function ModelHubPanel({
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-sm truncate">{model.displayName}</h3>
+                          <h3 className="font-semibold text-sm truncate">
+                            {model.displayName}
+                          </h3>
                           <Badge variant="outline" className="text-xs">
                             {model.type === "local" ? "Local" : "API"}
                           </Badge>
@@ -233,22 +249,32 @@ export default function ModelHubPanel({
                         </div>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           {model.contextWindow && (
-                            <span>Context: {model.contextWindow.toLocaleString()} tokens</span>
+                            <span>
+                              Context: {model.contextWindow.toLocaleString()}{" "}
+                              tokens
+                            </span>
                           )}
                           {model.costPer1kTokens && (
                             <span>
-                              Cost: ${model.costPer1kTokens.input}/1k in, ${model.costPer1kTokens.output}/1k out
+                              Cost: ${model.costPer1kTokens.input}/1k in, $
+                              {model.costPer1kTokens.output}/1k out
                             </span>
                           )}
                           {model.metadata?.size && (
-                            <span>Size: {(model.metadata.size as number).toLocaleString()} MB</span>
+                            <span>
+                              Size:{" "}
+                              {(model.metadata.size as number).toLocaleString()}{" "}
+                              MB
+                            </span>
                           )}
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <div className="flex items-center gap-2">
                           {getStatusIcon(model.status)}
-                          <span className="text-xs font-medium">{getStatusLabel(model.status)}</span>
+                          <span className="text-xs font-medium">
+                            {getStatusLabel(model.status)}
+                          </span>
                         </div>
                         <Button
                           size="sm"
@@ -271,8 +297,11 @@ export default function ModelHubPanel({
                 <p>No models found in marketplace</p>
               </div>
             ) : (
-              marketplaceModels.map((item) => (
-                <Card key={item.id} className="cursor-pointer transition-all hover:border-accent">
+              marketplaceModels.map(item => (
+                <Card
+                  key={item.id}
+                  className="cursor-pointer transition-all hover:border-accent"
+                >
                   <CardContent className="pt-4">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
@@ -282,10 +311,16 @@ export default function ModelHubPanel({
                             {item.provider}
                           </Badge>
                         </div>
-                        <p className="text-xs text-muted-foreground mb-2">{item.description}</p>
+                        <p className="text-xs text-muted-foreground mb-2">
+                          {item.description}
+                        </p>
                         <div className="flex flex-wrap gap-2 mb-2">
-                          {item.tags.map((tag) => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
+                          {item.tags.map(tag => (
+                            <Badge
+                              key={tag}
+                              variant="secondary"
+                              className="text-xs"
+                            >
                               {tag}
                             </Badge>
                           ))}
@@ -293,21 +328,24 @@ export default function ModelHubPanel({
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span>Size: {item.size.toLocaleString()} MB</span>
                           <span>Rating: {item.rating.toFixed(1)}/5</span>
-                          <span>Downloads: {(item.downloads / 1000).toFixed(0)}K</span>
+                          <span>
+                            Downloads: {(item.downloads / 1000).toFixed(0)}K
+                          </span>
                           <span>Popularity: {item.popularity}%</span>
                         </div>
                         <div className="mt-2 flex flex-wrap gap-1">
-                          {item.quantizations.map((q) => (
-                            <Badge key={q} variant="outline" className="text-xs">
+                          {item.quantizations.map(q => (
+                            <Badge
+                              key={q}
+                              variant="outline"
+                              className="text-xs"
+                            >
                               {q}
                             </Badge>
                           ))}
                         </div>
                       </div>
-                      <Button
-                        size="sm"
-                        onClick={() => onModelDownload?.(item)}
-                      >
+                      <Button size="sm" onClick={() => onModelDownload?.(item)}>
                         <Download className="w-4 h-4 mr-2" />
                         Download
                       </Button>

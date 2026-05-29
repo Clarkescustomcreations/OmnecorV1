@@ -22,7 +22,9 @@ export const SERVER_CONFIG = {
   /** Host binding address */
   host: process.env.OMNECOR_HOST || "0.0.0.0",
   /** CORS allowed origins */
-  corsOrigins: (process.env.OMNECOR_CORS_ORIGINS || "http://localhost:5173").split(","),
+  corsOrigins: (
+    process.env.OMNECOR_CORS_ORIGINS || "http://localhost:5173"
+  ).split(","),
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -62,12 +64,12 @@ export const WATCHER_CONFIG = {
   debounceMs: parseInt(process.env.WATCHER_DEBOUNCE_MS || "300", 10),
   /** Glob patterns to ignore */
   ignored: [
-    /(^|[/\\])\../,        // hidden files/dirs
-    /node_modules/,         // node_modules
-    /\.git/,                // git internals
-    /__pycache__/,          // Python cache
-    /\.pyc$/,               // compiled Python
-    /dist\//,               // build output
+    /(^|[/\\])\../, // hidden files/dirs
+    /node_modules/, // node_modules
+    /\.git/, // git internals
+    /__pycache__/, // Python cache
+    /\.pyc$/, // compiled Python
+    /dist\//, // build output
   ],
 } as const;
 
@@ -77,9 +79,15 @@ export const WATCHER_CONFIG = {
 
 export const PYTHON_SCRIPTS = {
   /** Path to the LoRA fine-tuning script */
-  loraTraining: path.resolve(__dirname, "../python_scripts/localLLMfine-tuning.py"),
+  loraTraining: path.resolve(
+    __dirname,
+    "../python_scripts/localLLMfine-tuning.py"
+  ),
   /** Path to the Blender headless executor bridge */
-  blenderBridge: path.resolve(__dirname, "../../python_bridges/blender_bridge.py"),
+  blenderBridge: path.resolve(
+    __dirname,
+    "../../python_bridges/blender_bridge.py"
+  ),
   /** Path to the ESP flash tool wrapper */
   espFlash: path.resolve(__dirname, "../python_scripts/flash_mcu.py"),
   /** Python executable (can be overridden for venvs) */
@@ -94,7 +102,9 @@ export const PYTHON_SCRIPTS = {
 
 export const TRAINING_CONFIG = {
   /** Default output directory for LoRA adapters */
-  defaultOutputDir: process.env.LORA_OUTPUT_DIR || path.resolve(process.env.HOME || "/home/user", ".omnecor/lora_outputs"),
+  defaultOutputDir:
+    process.env.LORA_OUTPUT_DIR ||
+    path.resolve(process.env.HOME || "/home/user", ".omnecor/lora_outputs"),
   /** Maximum concurrent training jobs */
   maxConcurrentJobs: parseInt(process.env.MAX_TRAINING_JOBS || "1", 10),
 } as const;
@@ -111,7 +121,9 @@ export const SECURITY_CONFIG = {
   /** Maximum file size for security scanning (bytes) */
   maxScanFileSize: 50 * 1024 * 1024, // 50 MB
   /** Backup directory */
-  backupDir: process.env.OMNECOR_BACKUP_DIR || path.resolve(process.env.HOME || "/home/user", ".omnecor/backups"),
+  backupDir:
+    process.env.OMNECOR_BACKUP_DIR ||
+    path.resolve(process.env.HOME || "/home/user", ".omnecor/backups"),
 } as const;
 
 // ---------------------------------------------------------------------------

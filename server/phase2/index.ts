@@ -23,9 +23,9 @@ export { VoiceService } from "./services/VoiceService";
 export { SecurityService } from "./services/SecurityService";
 
 // ─── Bridges ─────────────────────────────────────────────────────────────────
-export { BlenderBridge } from "./bridges/BlenderBridge";
-export { KiCadBridge } from "./bridges/KiCadBridge";
-export { ESPToolBridge } from "./bridges/ESPToolBridge";
+export { BlenderBridge } from "./services/BlenderService";
+export { KiCadBridge } from "./services/KiCadService";
+export { ESPToolBridge } from "./services/ESPToolService";
 
 // ─── WebSocket ───────────────────────────────────────────────────────────────
 export { OmnecorWebSocketServer } from "./websocket/WebSocketServer";

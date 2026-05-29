@@ -3,101 +3,146 @@ import ChatInterface from "@/components/ChatInterface";
 import ContextTransparencyIndicator from "@/components/ContextTransparencyIndicator";
 import VisualContextMap from "@/components/VisualContextMap";
 import { MessageCircle } from "lucide-react";
-import { useState, useCallback } from "react";
-import { trpc } from "@/lib/trpc";
-import { ChatMessage } from "@/types/chat"; // Assuming type is defined here based on usage
+import { useState, useCallback, useMemo } from "react";
+import { vanillaTrpc } from "@/lib/trpc";
+import {
+  ChatMessage,
+  ContextTransparency,
+  calculateContextTransparency,
+  createConversation,
+  addMessageToConversation,
+} from "@/lib/chatContext";
 
 interface SelectedModel {
-  providerId: 'ollama' | 'anthropic' | 'openai' | 'gemini' | 'groq';
+  providerId: "ollama" | "anthropic" | "openai" | "gemini" | "groq";
   modelId: string;
   apiKey?: string;
   baseUrl?: string;
 }
 
 export default function Chat() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [conversation, setConversation] = useState(() =>
+    createConversation("New Conversation", "default")
+  );
   const [isStreaming, setIsStreaming] = useState(false);
 
   const [selectedModel] = useState<SelectedModel | undefined>(() => {
     try {
-      const s = localStorage.getItem('omnecor:selectedModel');
+      const s = localStorage.getItem("omnecor:selectedModel");
       return s ? JSON.parse(s) : undefined;
-    } catch { return undefined; }
+    } catch {
+      return undefined;
+    }
   });
 
-  const handleSendMessage = useCallback(async (content: string) => {
-    if (!content.trim() || isStreaming) return;
+  const transparency = useMemo(
+    () => calculateContextTransparency(conversation),
+    [conversation]
+  );
 
-    const userMsg: ChatMessage = {
-      id: crypto.randomUUID(),
-      role: 'user',
-      content,
-      timestamp: new Date(),
-      tokens: Math.ceil(content.length / 4),
-    };
-    setMessages(prev => [...prev, userMsg]);
+  const handleSendMessage = useCallback(
+    async (content: string) => {
+      if (!content.trim() || isStreaming) return;
 
-    // Demo mode fallback (no model configured)
-    if (!selectedModel) {
-      setIsStreaming(true);
-      setTimeout(() => {
-        setMessages(prev => [...prev, {
-          id: crypto.randomUUID(),
-          role: 'assistant' as const,
-          content: 'Demo mode — select a model in Model Hub to enable real responses.',
-          timestamp: new Date(),
-          tokens: 18,
-        }]);
-        setIsStreaming(false);
-      }, 600);
-      return;
-    }
+      const userMsg: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: "user",
+        content,
+        timestamp: new Date(),
+        tokens: Math.ceil(content.length / 4),
+      };
 
-    setIsStreaming(true);
-    const assistantId = crypto.randomUUID();
-    let assistantContent = '';
+      setConversation(prev => addMessageToConversation(prev, userMsg));
 
-    setMessages(prev => [...prev, {
-      id: assistantId, role: 'assistant', content: '', timestamp: new Date(), tokens: 0,
-    }]);
-
-    const sub = trpc.aiProvider.chatStream.subscribe(
-      {
-        providerId: selectedModel.providerId,
-        modelId: selectedModel.modelId,
-        apiKey: selectedModel.apiKey,
-        baseUrl: selectedModel.baseUrl,
-        messages: messages.map(m => ({ role: m.role, content: m.content })),
-      },
-      {
-        onData(chunk) {
-          assistantContent += chunk.delta;
-          setMessages(prev => prev.map(m =>
-            m.id === assistantId
-              ? { ...m, content: assistantContent, tokens: chunk.totalTokens ?? Math.ceil(assistantContent.length / 4) }
-              : m
-          ));
-          if (chunk.done) {
-            setIsStreaming(false);
-            sub.unsubscribe();
-          }
-        },
-        onError(err) {
-          console.error('[chat stream error]', err);
-          setMessages(prev => prev.map(m =>
-            m.id === assistantId
-              ? { ...m, content: `Error: ${err.message}`, metadata: { error: err.message } }
-              : m
-          ));
+      // Demo mode fallback (no model configured)
+      if (!selectedModel) {
+        setIsStreaming(true);
+        setTimeout(() => {
+          const assistantMsg: ChatMessage = {
+            id: crypto.randomUUID(),
+            role: "assistant",
+            content:
+              "Demo mode — select a model in Model Hub to enable real responses.",
+            timestamp: new Date(),
+            tokens: 18,
+          };
+          setConversation(prev => addMessageToConversation(prev, assistantMsg));
           setIsStreaming(false);
-        },
+        }, 600);
+        return;
       }
-    );
-  }, [messages, isStreaming, selectedModel]);
+
+      setIsStreaming(true);
+      const assistantId = crypto.randomUUID();
+      let assistantContent = "";
+
+      const initialAssistantMsg: ChatMessage = {
+        id: assistantId,
+        role: "assistant",
+        content: "",
+        timestamp: new Date(),
+        tokens: 0,
+      };
+      setConversation(prev =>
+        addMessageToConversation(prev, initialAssistantMsg)
+      );
+
+      const sub = vanillaTrpc.aiProvider.chatStream.subscribe(
+        {
+          providerId: selectedModel.providerId,
+          modelId: selectedModel.modelId,
+          apiKey: selectedModel.apiKey,
+          baseUrl: selectedModel.baseUrl,
+          messages: conversation.messages
+            .concat(userMsg)
+            .map(m => ({ role: m.role as any, content: m.content })),
+        },
+        {
+          onData(chunk: any) {
+            assistantContent += chunk.delta;
+            setConversation(prev => ({
+              ...prev,
+              messages: prev.messages.map(m =>
+                m.id === assistantId
+                  ? {
+                      ...m,
+                      content: assistantContent,
+                      tokens:
+                        chunk.totalTokens ??
+                        Math.ceil(assistantContent.length / 4),
+                    }
+                  : m
+              ),
+            }));
+            if (chunk.done) {
+              setIsStreaming(false);
+            }
+          },
+          onError(err: any) {
+            console.error("[chat stream error]", err);
+            setConversation(prev => ({
+              ...prev,
+              messages: prev.messages.map(m =>
+                m.id === assistantId
+                  ? {
+                      ...m,
+                      content: `Error: ${err.message}`,
+                      metadata: { error: err.message },
+                    }
+                  : m
+              ),
+            }));
+            setIsStreaming(false);
+          },
+        }
+      );
+    },
+    [conversation, isStreaming, selectedModel]
+  );
 
   const handleClearHistory = useCallback(() => {
     if (confirm("Are you sure you want to clear the conversation history?")) {
-      setMessages([]);
+      setConversation(createConversation("New Conversation", "default"));
     }
   }, []);
 
@@ -122,7 +167,7 @@ export default function Chat() {
           {/* Chat Area */}
           <div className="flex-1 flex flex-col min-w-0">
             <ChatInterface
-              messages={messages}
+              messages={conversation.messages}
               isLoading={isStreaming}
               onSendMessage={handleSendMessage}
               onClearHistory={handleClearHistory}
@@ -133,12 +178,12 @@ export default function Chat() {
           {/* Context Panel */}
           <div className="w-80 flex flex-col gap-4 overflow-hidden">
             <ContextTransparencyIndicator
-              transparency={0} // Placeholder, needs proper calculation
+              transparency={transparency}
               className="flex-shrink-0"
             />
 
             <VisualContextMap
-              files={[]} // Placeholder
+              files={conversation.contextFiles}
               onToggleFile={() => {}}
               onRemoveFile={() => {}}
               className="flex-1 min-h-0"

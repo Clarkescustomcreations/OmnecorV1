@@ -110,7 +110,7 @@
   --sidebar-foreground: oklch(0.96 0.01 240);
   --sidebar-accent: oklch(0.65 0.15 260);
   --sidebar-accent-foreground: oklch(0.12 0.01 240);
-  --sidebar-border: oklch(0.20 0.01 240);
+  --sidebar-border: oklch(0.2 0.01 240);
   --sidebar-ring: oklch(0.65 0.15 260);
 }
 
@@ -120,7 +120,9 @@
   }
   body {
     @apply bg-background text-foreground font-sans;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 
   /* Typography System */

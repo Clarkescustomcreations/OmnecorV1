@@ -122,7 +122,7 @@ export class BlenderBridge extends EventEmitter {
   async checkInstallation(): Promise<BlenderInfo> {
     const { spawn } = await import("child_process");
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const proc = spawn(this.blenderBin, ["--version"], {
         timeout: 10000,
       });
@@ -132,7 +132,7 @@ export class BlenderBridge extends EventEmitter {
         stdout += chunk.toString();
       });
 
-      proc.on("close", (code) => {
+      proc.on("close", code => {
         if (code === 0 && stdout) {
           // Parse version from output like "Blender 4.1.0"
           const versionMatch = stdout.match(/Blender\s+(\d+\.\d+\.\d+)/);
@@ -185,7 +185,9 @@ export class BlenderBridge extends EventEmitter {
       try {
         await fs.access(resolvedBlend);
       } catch {
-        throw new Error(`[Omnecor Blender] Blend file not found: ${resolvedBlend}`);
+        throw new Error(
+          `[Omnecor Blender] Blend file not found: ${resolvedBlend}`
+        );
       }
     }
 
@@ -239,7 +241,11 @@ export class BlenderBridge extends EventEmitter {
    * @param label      - Optional job label
    * @returns Job ID
    */
-  async render(blendFile?: string, outputPath?: string, label?: string): Promise<string> {
+  async render(
+    blendFile?: string,
+    outputPath?: string,
+    label?: string
+  ): Promise<string> {
     const args: string[] = ["-b"];
 
     if (blendFile) {
@@ -251,7 +257,7 @@ export class BlenderBridge extends EventEmitter {
     args.push("-P", this.bridgeScript);
     args.push("--");
     args.push("--action", "render");
-    
+
     if (outputPath) {
       args.push("--filepath", path.resolve(outputPath));
     }
@@ -260,7 +266,9 @@ export class BlenderBridge extends EventEmitter {
       type: "blender",
       command: this.blenderBin,
       args,
-      label: label || `Blender Render: ${blendFile ? path.basename(blendFile) : "current scene"}`,
+      label:
+        label ||
+        `Blender Render: ${blendFile ? path.basename(blendFile) : "current scene"}`,
       timeoutMs: 600000,
     });
 
@@ -277,7 +285,11 @@ export class BlenderBridge extends EventEmitter {
    */
   async executeExpression(expression: string, label?: string): Promise<string> {
     // Write expression to a temporary file
-    const tmpDir = path.join(process.env.HOME || "/tmp", ".omnecor", "blender_tmp");
+    const tmpDir = path.join(
+      process.env.HOME || "/tmp",
+      ".omnecor",
+      "blender_tmp"
+    );
     await fs.mkdir(tmpDir, { recursive: true });
 
     const tmpScript = path.join(tmpDir, `expr_${Date.now()}.py`);
@@ -333,11 +345,14 @@ print('{"status": "success", "message": "Exported to STL", "output": "${outputPa
     if (!script) {
       throw new Error(
         `[Omnecor Blender] Unsupported export format: ${ext}. ` +
-        `Supported: ${Object.keys(exportScripts).join(", ")}`
+          `Supported: ${Object.keys(exportScripts).join(", ")}`
       );
     }
 
-    return this.executeExpression(script, `Export ${path.basename(blendFile)} → ${ext}`);
+    return this.executeExpression(
+      script,
+      `Export ${path.basename(blendFile)} → ${ext}`
+    );
   }
 
   // -------------------------------------------------------------------------

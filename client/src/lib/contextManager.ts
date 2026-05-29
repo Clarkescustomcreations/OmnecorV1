@@ -1,6 +1,6 @@
 /**
  * Hierarchical Context Manager
- * 
+ *
  * Manages context with three levels:
  * 1. Permanent "Goal & Plan" buffer - NEVER pruned
  * 2. Conversation history - Pruned when context exceeds limits
@@ -116,7 +116,7 @@ export function addTerminalLogEntry(
 
 /**
  * Summarize terminal log when it exceeds threshold
- * 
+ *
  * Keeps the most recent entries and summarizes older ones.
  * Threshold is exactly 50 lines as specified in requirements.
  */
@@ -133,9 +133,11 @@ export function summarizeTerminalLog(
   const recentEntries = log.slice(log.length - 25);
 
   // Generate summary
-  const errorCount = entriesToSummarize.filter((e) => e.level === "error").length;
-  const warningCount = entriesToSummarize.filter((e) => e.level === "warning").length;
-  const infoCount = entriesToSummarize.filter((e) => e.level === "info").length;
+  const errorCount = entriesToSummarize.filter(e => e.level === "error").length;
+  const warningCount = entriesToSummarize.filter(
+    e => e.level === "warning"
+  ).length;
+  const infoCount = entriesToSummarize.filter(e => e.level === "info").length;
 
   const summary = `Auto-summarized ${entriesToSummarize.length} log entries: ${errorCount} errors, ${warningCount} warnings, ${infoCount} info messages. Time range: ${entriesToSummarize[0]?.timestamp.toLocaleString()} to ${entriesToSummarize[entriesToSummarize.length - 1]?.timestamp.toLocaleString()}`;
 
@@ -189,9 +191,15 @@ export function getContextStatistics(context: HierarchicalContext): {
     context.goalAndPlan.goal.length +
     context.goalAndPlan.plan.reduce((sum, p) => sum + p.length, 0);
 
-  const terminalLogSize = context.terminalLog.reduce((sum, entry) => sum + entry.message.length, 0);
+  const terminalLogSize = context.terminalLog.reduce(
+    (sum, entry) => sum + entry.message.length,
+    0
+  );
 
-  const summariesSize = context.logSummaries.reduce((sum, summary) => sum + summary.summary.length, 0);
+  const summariesSize = context.logSummaries.reduce(
+    (sum, summary) => sum + summary.summary.length,
+    0
+  );
 
   const totalSize = goalAndPlanSize + terminalLogSize + summariesSize;
 
@@ -219,22 +227,34 @@ export function getContextHealthStatus(context: HierarchicalContext): {
   if (context.terminalLog.length > TERMINAL_LOG_THRESHOLD) {
     return {
       status: "critical",
-      message: "Terminal log exceeds threshold and needs immediate summarization",
-      recommendations: ["Manually trigger log summarization", "Review recent errors"],
+      message:
+        "Terminal log exceeds threshold and needs immediate summarization",
+      recommendations: [
+        "Manually trigger log summarization",
+        "Review recent errors",
+      ],
     };
   }
 
   if (context.terminalLog.length > TERMINAL_LOG_THRESHOLD * 0.8) {
-    recommendations.push("Terminal log approaching threshold - consider summarization soon");
+    recommendations.push(
+      "Terminal log approaching threshold - consider summarization soon"
+    );
   }
 
-  const errorCount = context.terminalLog.filter((e) => e.level === "error").length;
+  const errorCount = context.terminalLog.filter(
+    e => e.level === "error"
+  ).length;
   if (errorCount > 5) {
-    recommendations.push(`High error count (${errorCount}) - review error logs`);
+    recommendations.push(
+      `High error count (${errorCount}) - review error logs`
+    );
   }
 
   if (stats.totalSize > 100000) {
-    recommendations.push("Context size is large - consider pruning or archiving");
+    recommendations.push(
+      "Context size is large - consider pruning or archiving"
+    );
   }
 
   const status =
@@ -302,14 +322,17 @@ export function createMockHierarchicalContext(): HierarchicalContext {
     createTerminalLogEntry("info", "Loading configuration files"),
     createTerminalLogEntry("info", "Initializing database connection"),
     createTerminalLogEntry("info", "Setting up AI model providers"),
-    createTerminalLogEntry("warning", "Ollama service not detected - using API models only"),
+    createTerminalLogEntry(
+      "warning",
+      "Ollama service not detected - using API models only"
+    ),
     createTerminalLogEntry("info", "Loading Neural Node-Tree data"),
     createTerminalLogEntry("info", "Initializing chat interface"),
     createTerminalLogEntry("info", "Omnecor ready for use"),
   ];
 
   let updatedContext = context;
-  mockEntries.forEach((entry) => {
+  mockEntries.forEach(entry => {
     updatedContext = addTerminalLogEntry(updatedContext, entry);
   });
 

@@ -19,7 +19,12 @@ export type FileContent = {
   type: "file_url";
   file_url: {
     url: string;
-    mime_type?: "audio/mpeg" | "audio/wav" | "application/pdf" | "audio/mp4" | "video/mp4" ;
+    mime_type?:
+      | "audio/mpeg"
+      | "audio/wav"
+      | "application/pdf"
+      | "audio/mp4"
+      | "video/mp4";
   };
 };
 
@@ -311,7 +316,7 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
 
     payload.max_tokens = 32768;
     payload.thinking = {
-      "budget_tokens": 128
+      budget_tokens: 128,
     };
 
     const normalizedResponseFormat = normalizeResponseFormat({
@@ -345,30 +350,35 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
   }
 
   // For other providers, we use AiProviderService (simplified)
-  const { AiProviderService } = await import("../phase2/services/AiProviderService.js");
+  const { AiProviderService } = await import(
+    "../phase2/services/AiProviderService.js"
+  );
   const aiProvider = AiProviderService.getInstance();
-  
+
   const content = await aiProvider.chat({
     providerId: provider,
     modelId: model,
     messages: messages.map(m => ({
       role: m.role as any,
-      content: typeof m.content === "string" ? m.content : JSON.stringify(m.content)
+      content:
+        typeof m.content === "string" ? m.content : JSON.stringify(m.content),
     })),
-    temperature
+    temperature,
   });
 
   return {
     id: `res_${Date.now()}`,
     created: Math.floor(Date.now() / 1000),
     model: model,
-    choices: [{
-      index: 0,
-      message: {
-        role: "assistant",
-        content: content
+    choices: [
+      {
+        index: 0,
+        message: {
+          role: "assistant",
+          content: content,
+        },
+        finish_reason: "stop",
       },
-      finish_reason: "stop"
-    }]
+    ],
   };
 }

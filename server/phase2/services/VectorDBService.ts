@@ -137,7 +137,7 @@ export class VectorDBService {
       this.initError = (error as Error).message;
       console.warn(
         `[Omnecor VectorDB] ChromaDB unavailable at ${this.chromaUrl}: ${this.initError}. ` +
-        `Semantic search will be disabled until ChromaDB is started.`
+          `Semantic search will be disabled until ChromaDB is started.`
       );
       // Do NOT throw — allow the application to start in degraded mode
     }
@@ -205,7 +205,9 @@ export class VectorDBService {
     documents: VectorDocument[]
   ): Promise<void> {
     if (!this.isInitialized) {
-      console.warn("[Omnecor VectorDB] Skipping ingestion — ChromaDB not connected.");
+      console.warn(
+        "[Omnecor VectorDB] Skipping ingestion — ChromaDB not connected."
+      );
       return;
     }
 
@@ -233,7 +235,7 @@ export class VectorDBService {
       } catch (error) {
         throw new Error(
           `[Omnecor VectorDB] Batch ingestion failed for '${collectionName}' ` +
-          `(batch ${Math.floor(i / batchSize) + 1}): ${(error as Error).message}`
+            `(batch ${Math.floor(i / batchSize) + 1}): ${(error as Error).message}`
         );
       }
     }
@@ -271,7 +273,10 @@ export class VectorDBService {
   /**
    * Remove a document from the collection (e.g., when a file is deleted).
    */
-  public async removeDocument(collectionName: string, documentId: string): Promise<void> {
+  public async removeDocument(
+    collectionName: string,
+    documentId: string
+  ): Promise<void> {
     if (!this.isInitialized) return;
 
     const collection = await this.getOrCreateCollection(collectionName);
@@ -299,7 +304,9 @@ export class VectorDBService {
     limit: number = 5
   ): Promise<SearchResult[]> {
     if (!this.isInitialized) {
-      console.warn("[Omnecor VectorDB] Search unavailable — ChromaDB not connected.");
+      console.warn(
+        "[Omnecor VectorDB] Search unavailable — ChromaDB not connected."
+      );
       return [];
     }
 
@@ -358,7 +365,7 @@ export class VectorDBService {
     if (!this.isInitialized || !this.client) {
       throw new Error(
         "[Omnecor VectorDB] Service not initialized. " +
-        "Ensure ChromaDB is running and call init() before operations."
+          "Ensure ChromaDB is running and call init() before operations."
       );
     }
   }

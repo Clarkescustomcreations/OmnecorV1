@@ -4,7 +4,7 @@ import { Zap } from "lucide-react";
 
 /**
  * Pipelines Page - Specialized Module Launchers
- * 
+ *
  * Provides access to three specialized tools:
  * 1. Custom LLM Builder - Fine-tuning with LoRA/QLoRA
  * 2. AI-Assisted 3D Modeler - Blender co-pilot

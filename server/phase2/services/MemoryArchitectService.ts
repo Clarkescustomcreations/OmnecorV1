@@ -24,7 +24,11 @@
  *   exposed via tRPC procedures in the knowledgeBase router.
  */
 
-import { VectorDBService, type VectorDocument, type SearchResult } from "./VectorDBService.js";
+import {
+  VectorDBService,
+  type VectorDocument,
+  type SearchResult,
+} from "./VectorDBService.js";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
@@ -41,14 +45,47 @@ const CHUNK_OVERLAP = 200;
 
 /** File extensions that can be ingested as text documents */
 const INGESTIBLE_EXTENSIONS = new Set([
-  ".txt", ".md", ".py", ".ts", ".tsx", ".js", ".jsx",
-  ".json", ".yaml", ".yml", ".toml", ".cfg", ".ini",
-  ".html", ".css", ".scss", ".less",
-  ".rs", ".go", ".java", ".c", ".cpp", ".h", ".hpp",
-  ".sh", ".bash", ".zsh", ".fish",
-  ".sql", ".graphql", ".proto",
-  ".env", ".gitignore", ".dockerfile",
-  ".r", ".R", ".lua", ".rb", ".php", ".swift", ".kt",
+  ".txt",
+  ".md",
+  ".py",
+  ".ts",
+  ".tsx",
+  ".js",
+  ".jsx",
+  ".json",
+  ".yaml",
+  ".yml",
+  ".toml",
+  ".cfg",
+  ".ini",
+  ".html",
+  ".css",
+  ".scss",
+  ".less",
+  ".rs",
+  ".go",
+  ".java",
+  ".c",
+  ".cpp",
+  ".h",
+  ".hpp",
+  ".sh",
+  ".bash",
+  ".zsh",
+  ".fish",
+  ".sql",
+  ".graphql",
+  ".proto",
+  ".env",
+  ".gitignore",
+  ".dockerfile",
+  ".r",
+  ".R",
+  ".lua",
+  ".rb",
+  ".php",
+  ".swift",
+  ".kt",
 ]);
 
 /** Maximum file size to ingest (5 MB) */
@@ -111,7 +148,9 @@ export class MemoryArchitectService {
       const status = await this.vectorDB.getStatus();
       this.initialized = status.isConnected;
       if (this.initialized) {
-        console.log("[Omnecor MemoryArchitect] Layer 2 (Long-Term Memory) online.");
+        console.log(
+          "[Omnecor MemoryArchitect] Layer 2 (Long-Term Memory) online."
+        );
       }
       return this.initialized;
     } catch (error) {
@@ -197,7 +236,12 @@ export class MemoryArchitectService {
     recursive: boolean = true
   ): Promise<IngestResult> {
     if (!this.initialized) {
-      return { filesProcessed: 0, chunksStored: 0, errors: [{ file: dirPath, error: "MemoryArchitect offline" }], durationMs: 0 };
+      return {
+        filesProcessed: 0,
+        chunksStored: 0,
+        errors: [{ file: dirPath, error: "MemoryArchitect offline" }],
+        durationMs: 0,
+      };
     }
 
     const startTime = Date.now();
@@ -312,8 +356,12 @@ export class MemoryArchitectService {
     const collectionName = this.collectionName(projectId);
 
     try {
-      const results = await this.vectorDB.semanticSearch(collectionName, query, limit);
-      return results.map((r) => ({
+      const results = await this.vectorDB.semanticSearch(
+        collectionName,
+        query,
+        limit
+      );
+      return results.map(r => ({
         ...r,
         sourcePath: r.metadata?.sourcePath as string | undefined,
         chunkIndex: r.metadata?.chunkIndex as number | undefined,
@@ -378,15 +426,20 @@ export class MemoryArchitectService {
       `Conversation Summary (${conversationId}):`,
       summary,
       ...(keyInsights.length > 0
-        ? ["\nKey Insights:", ...keyInsights.map((i) => `- ${i}`)]
+        ? ["\nKey Insights:", ...keyInsights.map(i => `- ${i}`)]
         : []),
     ].join("\n");
 
-    await this.ingestDocument(projectId, `episodic_${conversationId}`, fullText, {
-      type: "episodic_consolidation",
-      conversationId,
-      consolidatedAt: new Date().toISOString(),
-    });
+    await this.ingestDocument(
+      projectId,
+      `episodic_${conversationId}`,
+      fullText,
+      {
+        type: "episodic_consolidation",
+        conversationId,
+        consolidatedAt: new Date().toISOString(),
+      }
+    );
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -405,8 +458,16 @@ export class MemoryArchitectService {
     }
 
     const SKIP_DIRS = new Set([
-      "node_modules", ".git", ".next", "dist", "build",
-      "__pycache__", ".venv", "venv", ".cache", "coverage",
+      "node_modules",
+      ".git",
+      ".next",
+      "dist",
+      "build",
+      "__pycache__",
+      ".venv",
+      "venv",
+      ".cache",
+      "coverage",
     ]);
 
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });

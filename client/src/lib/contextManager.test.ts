@@ -15,7 +15,11 @@ import {
 describe("Hierarchical Context Manager", () => {
   describe("Goal & Plan Management", () => {
     it("should create a goal and plan", () => {
-      const goalAndPlan = createGoalAndPlan("Build Omnecor", ["Step 1", "Step 2"], "high");
+      const goalAndPlan = createGoalAndPlan(
+        "Build Omnecor",
+        ["Step 1", "Step 2"],
+        "high"
+      );
 
       expect(goalAndPlan.id).toBeDefined();
       expect(goalAndPlan.goal).toBe("Build Omnecor");
@@ -25,7 +29,11 @@ describe("Hierarchical Context Manager", () => {
     });
 
     it("should update goal and plan", () => {
-      const goalAndPlan = createGoalAndPlan("Build Omnecor", ["Step 1"], "high");
+      const goalAndPlan = createGoalAndPlan(
+        "Build Omnecor",
+        ["Step 1"],
+        "high"
+      );
       const updated = updateGoalAndPlan(goalAndPlan, {
         goal: "Build Omnecor v2",
         plan: ["Step 1", "Step 2", "Step 3"],
@@ -33,11 +41,17 @@ describe("Hierarchical Context Manager", () => {
 
       expect(updated.goal).toBe("Build Omnecor v2");
       expect(updated.plan).toHaveLength(3);
-      expect(updated.updatedAt.getTime()).toBeGreaterThanOrEqual(goalAndPlan.createdAt.getTime());
+      expect(updated.updatedAt.getTime()).toBeGreaterThanOrEqual(
+        goalAndPlan.createdAt.getTime()
+      );
     });
 
     it("should preserve ID when updating", () => {
-      const goalAndPlan = createGoalAndPlan("Build Omnecor", ["Step 1"], "high");
+      const goalAndPlan = createGoalAndPlan(
+        "Build Omnecor",
+        ["Step 1"],
+        "high"
+      );
       const updated = updateGoalAndPlan(goalAndPlan, { goal: "Updated Goal" });
 
       expect(updated.id).toBe(goalAndPlan.id);
@@ -57,7 +71,7 @@ describe("Hierarchical Context Manager", () => {
     it("should create entries with different levels", () => {
       const levels = ["info", "warning", "error", "debug"] as const;
 
-      levels.forEach((level) => {
+      levels.forEach(level => {
         const entry = createTerminalLogEntry(level, "Test");
         expect(entry.level).toBe(level);
       });
@@ -108,7 +122,12 @@ describe("Hierarchical Context Manager", () => {
       const entries = [];
 
       for (let i = 0; i < 60; i++) {
-        entries.push(createTerminalLogEntry(i % 10 === 0 ? "error" : "info", `Message ${i}`));
+        entries.push(
+          createTerminalLogEntry(
+            i % 10 === 0 ? "error" : "info",
+            `Message ${i}`
+          )
+        );
       }
 
       const updated = summarizeTerminalLog(context, entries);
@@ -151,7 +170,10 @@ describe("Hierarchical Context Manager", () => {
 
   describe("Hierarchical Context Creation", () => {
     it("should create hierarchical context", () => {
-      const context = createHierarchicalContext("Build Omnecor", ["Step 1", "Step 2"]);
+      const context = createHierarchicalContext("Build Omnecor", [
+        "Step 1",
+        "Step 2",
+      ]);
 
       expect(context.id).toBeDefined();
       expect(context.goalAndPlan.goal).toBe("Build Omnecor");
@@ -249,7 +271,7 @@ describe("Hierarchical Context Manager", () => {
     it("should have valid terminal log entries in mock", () => {
       const context = createMockHierarchicalContext();
 
-      context.terminalLog.forEach((entry) => {
+      context.terminalLog.forEach(entry => {
         expect(entry.id).toBeDefined();
         expect(entry.timestamp).toBeInstanceOf(Date);
         expect(["info", "warning", "error", "debug"]).toContain(entry.level);
@@ -259,7 +281,10 @@ describe("Hierarchical Context Manager", () => {
 
   describe("Goal & Plan Permanence", () => {
     it("should never modify goal and plan during context operations", () => {
-      const context = createHierarchicalContext("Original Goal", ["Plan 1", "Plan 2"]);
+      const context = createHierarchicalContext("Original Goal", [
+        "Plan 1",
+        "Plan 2",
+      ]);
       const originalGoal = context.goalAndPlan.goal;
 
       // Add many log entries

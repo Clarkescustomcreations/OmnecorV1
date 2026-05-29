@@ -136,13 +136,15 @@ export const knowledgeBaseRouter = router({
    * Semantic search across a project's long-term memory.
    * Returns ranked results with source file paths and relevance scores.
    */
-  search: publicProcedure
-    .input(searchSchema)
-    .query(async ({ ctx, input }) => {
-      if (!ctx.services.memoryArchitect.isOnline()) return [];
+  search: publicProcedure.input(searchSchema).query(async ({ ctx, input }) => {
+    if (!ctx.services.memoryArchitect.isOnline()) return [];
 
-      return ctx.services.memoryArchitect.search(input.projectId, input.query, input.limit);
-    }),
+    return ctx.services.memoryArchitect.search(
+      input.projectId,
+      input.query,
+      input.limit
+    );
+  }),
 
   /**
    * Retrieve context-relevant memory for AI prompt augmentation.
@@ -154,7 +156,8 @@ export const knowledgeBaseRouter = router({
   retrieveContext: publicProcedure
     .input(retrieveContextSchema)
     .query(async ({ ctx, input }) => {
-      if (!ctx.services.memoryArchitect.isOnline()) return { context: "", tokenEstimate: 0 };
+      if (!ctx.services.memoryArchitect.isOnline())
+        return { context: "", tokenEstimate: 0 };
 
       const context = await ctx.services.memoryArchitect.retrieveContext(
         input.projectId,
@@ -201,7 +204,8 @@ export const knowledgeBaseRouter = router({
         return { success: false, collectionName: null };
       }
 
-      const collectionName = await ctx.services.memoryArchitect.ensureProjectMemory(input.projectId);
+      const collectionName =
+        await ctx.services.memoryArchitect.ensureProjectMemory(input.projectId);
       return { success: true, collectionName };
     }),
 });

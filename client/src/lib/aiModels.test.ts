@@ -82,14 +82,16 @@ describe("AI Models Library", () => {
     it("should return all models", () => {
       const allModels = getAllModels();
 
-      expect(allModels.length).toBe(mockLocalModels.length + mockAPIModels.length);
+      expect(allModels.length).toBe(
+        mockLocalModels.length + mockAPIModels.length
+      );
     });
 
     it("should include both local and API models", () => {
       const allModels = getAllModels();
 
-      const localModels = allModels.filter((m) => m.type === "local");
-      const apiModels = allModels.filter((m) => m.type === "api");
+      const localModels = allModels.filter(m => m.type === "local");
+      const apiModels = allModels.filter(m => m.type === "api");
 
       expect(localModels.length).toBe(mockLocalModels.length);
       expect(apiModels.length).toBe(mockAPIModels.length);
@@ -97,7 +99,7 @@ describe("AI Models Library", () => {
 
     it("should mark selected model when ID provided", () => {
       const allModels = getAllModels(mockLocalModels[0].id);
-      const selectedModel = allModels.find((m) => m.isSelected);
+      const selectedModel = allModels.find(m => m.isSelected);
 
       expect(selectedModel).toBeDefined();
       expect(selectedModel?.id).toBe(mockLocalModels[0].id);
@@ -109,7 +111,7 @@ describe("AI Models Library", () => {
       const ollamaModels = getModelsBySource("ollama");
 
       expect(ollamaModels.length).toBeGreaterThan(0);
-      expect(ollamaModels.every((m) => m.source === "ollama")).toBe(true);
+      expect(ollamaModels.every(m => m.source === "ollama")).toBe(true);
     });
 
     it("should return empty array for unknown source", () => {
@@ -124,14 +126,14 @@ describe("AI Models Library", () => {
       const localModels = getModelsByType("local");
 
       expect(localModels.length).toBe(mockLocalModels.length);
-      expect(localModels.every((m) => m.type === "local")).toBe(true);
+      expect(localModels.every(m => m.type === "local")).toBe(true);
     });
 
     it("should filter API models", () => {
       const apiModels = getModelsByType("api");
 
       expect(apiModels.length).toBe(mockAPIModels.length);
-      expect(apiModels.every((m) => m.type === "api")).toBe(true);
+      expect(apiModels.every(m => m.type === "api")).toBe(true);
     });
   });
 
@@ -175,10 +177,12 @@ describe("AI Models Library", () => {
 
   describe("Marketplace Models", () => {
     it("should have valid marketplace model data", () => {
-      mockMarketplaceModels.forEach((model) => {
+      mockMarketplaceModels.forEach(model => {
         expect(model.id).toBeDefined();
         expect(model.name).toBeDefined();
-        expect(model.provider).toMatch(/ollama|llamacpp|openai|anthropic|gemini|groq/);
+        expect(model.provider).toMatch(
+          /ollama|llamacpp|openai|anthropic|gemini|groq/
+        );
         expect(model.size).toBeGreaterThan(0);
         expect(model.quantizations).toBeInstanceOf(Array);
         expect(model.rating).toBeGreaterThanOrEqual(0);
@@ -187,9 +191,11 @@ describe("AI Models Library", () => {
     });
 
     it("should have proper quantization options", () => {
-      mockMarketplaceModels.forEach((model) => {
+      mockMarketplaceModels.forEach(model => {
         expect(model.quantizations.length).toBeGreaterThan(0);
-        expect(model.quantizations.every((q) => typeof q === "string")).toBe(true);
+        expect(model.quantizations.every(q => typeof q === "string")).toBe(
+          true
+        );
       });
     });
   });

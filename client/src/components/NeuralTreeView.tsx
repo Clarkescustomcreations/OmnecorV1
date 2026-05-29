@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { TreeNode, convertNetworkToTreeStructure, NeuralNetwork } from "@/lib/neuralNodeTree";
+import {
+  TreeNode,
+  convertNetworkToTreeStructure,
+  NeuralNetwork,
+} from "@/lib/neuralNodeTree";
 import { ChevronRight, ChevronDown, Folder, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +16,7 @@ interface NeuralTreeViewProps {
 
 /**
  * NeuralTreeView Component
- * 
+ *
  * Renders the neural network as a hierarchical folder-tree structure.
  * Allows collapsing/expanding folders and clicking on files.
  */
@@ -24,7 +28,9 @@ export default function NeuralTreeView({
 }: NeuralTreeViewProps) {
   const treeStructure = convertNetworkToTreeStructure(network);
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(
-    new Set(network.nodes.filter((n) => n.data.isExpanded !== false).map((n) => n.id))
+    new Set(
+      network.nodes.filter(n => n.data.isExpanded !== false).map(n => n.id)
+    )
   );
 
   const toggleExpanded = (nodeId: string) => {
@@ -68,7 +74,7 @@ export default function NeuralTreeView({
           {/* Expand/Collapse Icon */}
           {hasChildren ? (
             <button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 toggleExpanded(node.id);
               }}
@@ -97,17 +103,19 @@ export default function NeuralTreeView({
           </span>
 
           {/* File Count Badge */}
-          {node.type === "folder" && node.children && node.children.length > 0 && (
-            <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">
-              {node.children.length}
-            </span>
-          )}
+          {node.type === "folder" &&
+            node.children &&
+            node.children.length > 0 && (
+              <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">
+                {node.children.length}
+              </span>
+            )}
         </div>
 
         {/* Render Children */}
         {hasChildren && isExpanded && (
           <div>
-            {node.children!.map((child) => renderTreeNode(child, depth + 1))}
+            {node.children!.map(child => renderTreeNode(child, depth + 1))}
           </div>
         )}
       </div>
@@ -122,7 +130,7 @@ export default function NeuralTreeView({
         </div>
       ) : (
         <div className="space-y-1">
-          {treeStructure.map((node) => renderTreeNode(node))}
+          {treeStructure.map(node => renderTreeNode(node))}
         </div>
       )}
     </div>

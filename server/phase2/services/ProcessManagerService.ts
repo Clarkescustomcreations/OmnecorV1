@@ -41,7 +41,12 @@ import { PYTHON_SCRIPTS, TRAINING_CONFIG } from "../config/index.js";
 export type ProcessType = "lora_training" | "blender" | "esp_flash" | "custom";
 
 /** Current state of a managed process */
-export type ProcessState = "queued" | "running" | "completed" | "failed" | "cancelled";
+export type ProcessState =
+  | "queued"
+  | "running"
+  | "completed"
+  | "failed"
+  | "cancelled";
 
 /** Configuration for spawning a new process */
 export interface SpawnConfig {
@@ -182,10 +187,7 @@ export class ProcessManagerService extends EventEmitter {
     // Validate dataset file exists
     await this.validatePath(datasetPath, "Dataset file");
 
-    const args = [
-      PYTHON_SCRIPTS.loraTraining,
-      "--dataset_path", datasetPath,
-    ];
+    const args = [PYTHON_SCRIPTS.loraTraining, "--dataset_path", datasetPath];
 
     if (modelName) {
       args.push("--model_name", modelName);
@@ -220,13 +222,14 @@ export class ProcessManagerService extends EventEmitter {
    */
   async spawn(config: SpawnConfig): Promise<string> {
     // Check concurrent process limit
-    const runningCount = Array.from(this.processes.values())
-      .filter((p) => p.state === "running").length;
+    const runningCount = Array.from(this.processes.values()).filter(
+      p => p.state === "running"
+    ).length;
 
     if (runningCount >= this.maxConcurrent) {
       throw new Error(
         `[Omnecor ProcessManager] Maximum concurrent processes (${this.maxConcurrent}) reached. ` +
-        `Wait for a running job to complete before starting a new one.`
+          `Wait for a running job to complete before starting a new one.`
       );
     }
 
@@ -251,7 +254,7 @@ export class ProcessManagerService extends EventEmitter {
 
     // Prepare sanitized environment
     const env: Record<string, string> = {
-      ...process.env as Record<string, string>,
+      ...(process.env as Record<string, string>),
       PYTHONUNBUFFERED: "1", // Force unbuffered output for real-time streaming
       ...(config.env || {}),
     };
@@ -268,7 +271,7 @@ export class ProcessManagerService extends EventEmitter {
 
     console.log(
       `[Omnecor ProcessManager] Spawned: jobId="${jobId}" type="${config.type}" ` +
-      `pid=${child.pid} cmd="${config.command} ${config.args.join(" ")}"`
+        `pid=${child.pid} cmd="${config.command} ${config.args.join(" ")}"`
     );
 
     // Emit lifecycle event: started
@@ -303,7 +306,9 @@ export class ProcessManagerService extends EventEmitter {
         } catch {
           // Non-JSON stdout line — log but don't crash
           // This handles Blender/Python print statements that aren't JSON
-          console.debug(`[Omnecor ProcessManager] Non-JSON stdout [${jobId}]: ${trimmed}`);
+          console.debug(
+            `[Omnecor ProcessManager] Non-JSON stdout [${jobId}]: ${trimmed}`
+          );
         }
       }
     });
@@ -363,7 +368,7 @@ export class ProcessManagerService extends EventEmitter {
       );
     });
 
-    child.on("error", (err) => {
+    child.on("error", err => {
       managed.state = "failed";
       managed.stderrBuffer += `\nSpawn error: ${err.message}`;
       managed.completedAt = new Date().toISOString();
@@ -433,7 +438,7 @@ export class ProcessManagerService extends EventEmitter {
    * Get status of all managed processes.
    */
   getAllJobs(): ProcessStatus[] {
-    return Array.from(this.processes.values()).map((m) => ({
+    return Array.from(this.processes.values()).map(m => ({
       jobId: m.jobId,
       type: m.type,
       label: m.label,
@@ -472,14 +477,17 @@ export class ProcessManagerService extends EventEmitter {
    * Gracefully shut down all running processes. Call on application exit.
    */
   async shutdown(): Promise<void> {
-    const running = Array.from(this.processes.entries())
-      .filter(([_, m]) => m.state === "running");
+    const running = Array.from(this.processes.entries()).filter(
+      ([_, m]) => m.state === "running"
+    );
 
     for (const [jobId] of running) {
       await this.cancelJob(jobId);
     }
 
-    console.log(`[Omnecor ProcessManager] Shut down ${running.length} running process(es).`);
+    console.log(
+      `[Omnecor ProcessManager] Shut down ${running.length} running process(es).`
+    );
   }
 
   // -------------------------------------------------------------------------
@@ -504,7 +512,9 @@ export class ProcessManagerService extends EventEmitter {
     exitCode: number | null = null,
     error: string | null = null
   ): void {
-    const startTime = managed.startedAt ? new Date(managed.startedAt).getTime() : null;
+    const startTime = managed.startedAt
+      ? new Date(managed.startedAt).getTime()
+      : null;
     const now = Date.now();
 
     const event: ProcessLifecycleEvent = {
@@ -513,7 +523,9 @@ export class ProcessManagerService extends EventEmitter {
       label: managed.label,
       state,
       exitCode,
-      error: error || (state === "failed" ? managed.stderrBuffer.slice(0, 500) : null),
+      error:
+        error ||
+        (state === "failed" ? managed.stderrBuffer.slice(0, 500) : null),
       timestamp: new Date().toISOString(),
       durationMs: startTime ? now - startTime : null,
     };

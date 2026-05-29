@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { X, Eye, EyeOff, Trash2 } from "lucide-react";
@@ -15,7 +21,7 @@ interface VisualContextMapProps {
 
 /**
  * Visual Context Map Component
- * 
+ *
  * Interactive visualization of files currently in the AI's context.
  * Allows users to:
  * - See all files and their token contribution
@@ -31,8 +37,8 @@ export default function VisualContextMap({
 }: VisualContextMapProps) {
   const [expandedFileId, setExpandedFileId] = useState<string | null>(null);
 
-  const includedFiles = files.filter((f) => f.included);
-  const excludedFiles = files.filter((f) => !f.included);
+  const includedFiles = files.filter(f => f.included);
+  const excludedFiles = files.filter(f => !f.included);
   const totalTokens = files.reduce((sum, f) => sum + f.tokens, 0);
 
   const getFileIcon = (type: string) => {
@@ -46,10 +52,14 @@ export default function VisualContextMap({
   };
 
   const getFileTypeColor = (filename: string) => {
-    if (filename.endsWith(".ts") || filename.endsWith(".tsx")) return "bg-blue-500/10 border-blue-500/30";
-    if (filename.endsWith(".js") || filename.endsWith(".jsx")) return "bg-yellow-500/10 border-yellow-500/30";
-    if (filename.endsWith(".json")) return "bg-purple-500/10 border-purple-500/30";
-    if (filename.endsWith(".md")) return "bg-orange-500/10 border-orange-500/30";
+    if (filename.endsWith(".ts") || filename.endsWith(".tsx"))
+      return "bg-blue-500/10 border-blue-500/30";
+    if (filename.endsWith(".js") || filename.endsWith(".jsx"))
+      return "bg-yellow-500/10 border-yellow-500/30";
+    if (filename.endsWith(".json"))
+      return "bg-purple-500/10 border-purple-500/30";
+    if (filename.endsWith(".md"))
+      return "bg-orange-500/10 border-orange-500/30";
     return "bg-muted border-border";
   };
 
@@ -72,9 +82,13 @@ export default function VisualContextMap({
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-lg">{getFileIcon(file.type)}</span>
-                <span className="font-mono font-medium text-sm truncate">{file.name}</span>
+                <span className="font-mono font-medium text-sm truncate">
+                  {file.name}
+                </span>
               </div>
-              <p className="text-xs text-muted-foreground truncate">{file.path}</p>
+              <p className="text-xs text-muted-foreground truncate">
+                {file.path}
+              </p>
             </div>
 
             <div className="flex gap-1">
@@ -83,7 +97,9 @@ export default function VisualContextMap({
                 variant="ghost"
                 className="h-7 w-7 p-0"
                 onClick={() => onToggleFile?.(file.id)}
-                title={file.included ? "Exclude from context" : "Include in context"}
+                title={
+                  file.included ? "Exclude from context" : "Include in context"
+                }
               >
                 {file.included ? (
                   <Eye className="w-4 h-4 text-green-500" />
@@ -127,10 +143,12 @@ export default function VisualContextMap({
               </button>
 
               {isExpanded && (
-                <div className={cn(
-                  "p-2 rounded-md border text-xs font-mono text-muted-foreground overflow-x-auto",
-                  getFileTypeColor(file.name)
-                )}>
+                <div
+                  className={cn(
+                    "p-2 rounded-md border text-xs font-mono text-muted-foreground overflow-x-auto",
+                    getFileTypeColor(file.name)
+                  )}
+                >
                   <pre className="whitespace-pre-wrap break-words text-xs">
                     {file.preview.split("\n").slice(0, 5).join("\n")}
                     {file.preview.split("\n").length > 5 && "\n..."}
@@ -162,11 +180,15 @@ export default function VisualContextMap({
           </div>
           <div className="p-2 rounded-lg bg-accent/10 border border-accent/30">
             <p className="text-muted-foreground mb-1">Included</p>
-            <p className="font-mono font-medium text-accent">{includedFiles.length}</p>
+            <p className="font-mono font-medium text-accent">
+              {includedFiles.length}
+            </p>
           </div>
           <div className="p-2 rounded-lg bg-muted">
             <p className="text-muted-foreground mb-1">Total Tokens</p>
-            <p className="font-mono font-medium">{totalTokens.toLocaleString()}</p>
+            <p className="font-mono font-medium">
+              {totalTokens.toLocaleString()}
+            </p>
           </div>
         </div>
 
@@ -184,7 +206,7 @@ export default function VisualContextMap({
                   📌 Included ({includedFiles.length})
                 </h3>
                 <div className="space-y-2">
-                  {includedFiles.map((file) => renderFileCard(file))}
+                  {includedFiles.map(file => renderFileCard(file))}
                 </div>
               </div>
             )}
@@ -196,7 +218,7 @@ export default function VisualContextMap({
                   🔒 Excluded ({excludedFiles.length})
                 </h3>
                 <div className="space-y-2">
-                  {excludedFiles.map((file) => renderFileCard(file))}
+                  {excludedFiles.map(file => renderFileCard(file))}
                 </div>
               </div>
             )}
@@ -210,7 +232,9 @@ export default function VisualContextMap({
               size="sm"
               variant="outline"
               className="flex-1 text-xs"
-              onClick={() => files.forEach((f) => f.included && onToggleFile?.(f.id))}
+              onClick={() =>
+                files.forEach(f => f.included && onToggleFile?.(f.id))
+              }
             >
               <EyeOff className="w-3 h-3 mr-1" />
               Exclude All
@@ -219,7 +243,9 @@ export default function VisualContextMap({
               size="sm"
               variant="outline"
               className="flex-1 text-xs"
-              onClick={() => files.forEach((f) => !f.included && onToggleFile?.(f.id))}
+              onClick={() =>
+                files.forEach(f => !f.included && onToggleFile?.(f.id))
+              }
             >
               <Eye className="w-3 h-3 mr-1" />
               Include All

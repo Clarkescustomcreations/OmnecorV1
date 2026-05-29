@@ -1,5 +1,11 @@
 import OmnecorDashboardLayout from "@/components/OmnecorDashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Brain, Grid3x3, List } from "lucide-react";
@@ -7,7 +13,7 @@ import { useState, useMemo } from "react";
 import NeuralGraphView from "@/components/NeuralGraphView";
 import NeuralTreeView from "@/components/NeuralTreeView";
 import { trpc } from "@/lib/trpc";
-import { convertFileSystemToNeuralNetwork } from '@/lib/neuralNodeTree';
+import { convertFileSystemToNeuralNetwork } from "@/lib/neuralNodeTree";
 
 /**
  * Neural Brain Map Page
@@ -15,8 +21,8 @@ import { convertFileSystemToNeuralNetwork } from '@/lib/neuralNodeTree';
 export default function BrainMap() {
   const [viewMode, setViewMode] = useState<"graph" | "tree">("graph");
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  
-  const [watchDir, setWatchDir] = useState('');
+
+  const [watchDir, setWatchDir] = useState("");
   const [activeProjectId, setActiveProjectId] = useState<string | undefined>();
 
   const { data: fileTree } = trpc.project.getFileTree.useQuery(
@@ -29,11 +35,23 @@ export default function BrainMap() {
   });
 
   const neuralNetwork = useMemo(() => {
-    if (!fileTree?.files) return { nodes: [], edges: [] };
-    return convertFileSystemToNeuralNetwork(fileTree.files as any, activeProjectId ?? 'default');
+    if (!fileTree?.files)
+      return {
+        id: "default",
+        name: "No Project",
+        type: "master",
+        nodes: [],
+        edges: [],
+      } as any;
+    return convertFileSystemToNeuralNetwork(
+      fileTree.files as any,
+      activeProjectId ?? "default"
+    );
   }, [fileTree, activeProjectId]);
 
-  const selectedNode = neuralNetwork.nodes.find((n) => n.id === selectedNodeId);
+  const selectedNode = neuralNetwork.nodes.find(
+    (n: any) => n.id === selectedNodeId
+  );
 
   return (
     <OmnecorDashboardLayout>
@@ -46,11 +64,12 @@ export default function BrainMap() {
               <div>
                 <h1 className="text-xl font-bold">Neural Brain Map</h1>
                 <p className="text-sm text-muted-foreground">
-                  Spatial project organization with interactive node-based visualization
+                  Spatial project organization with interactive node-based
+                  visualization
                 </p>
               </div>
             </div>
-            
+
             {/* Watch Controls */}
             <div className="flex items-center gap-2 mr-2">
               <Input
@@ -61,10 +80,15 @@ export default function BrainMap() {
               />
               <Button
                 size="sm"
-                onClick={() => registerWatcher.mutate({ projectId: watchDir, rootDir: watchDir })}
+                onClick={() =>
+                  registerWatcher.mutate({
+                    projectId: watchDir,
+                    rootDir: watchDir,
+                  })
+                }
                 disabled={!watchDir || registerWatcher.isPending}
               >
-                {registerWatcher.isPending ? 'Starting…' : 'Watch'}
+                {registerWatcher.isPending ? "Starting…" : "Watch"}
               </Button>
             </div>
 
@@ -140,7 +164,9 @@ export default function BrainMap() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Total Files:</span>
-                    <span className="font-mono">{fileTree?.files?.length ?? 0}</span>
+                    <span className="font-mono">
+                      {fileTree?.files?.length ?? 0}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -158,15 +184,21 @@ export default function BrainMap() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Name:</span>
-                      <span className="font-mono truncate">{selectedNode.data?.label}</span>
+                      <span className="font-mono truncate">
+                        {selectedNode.label}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Type:</span>
-                      <span className="font-mono capitalize">{selectedNode.data?.type}</span>
+                      <span className="font-mono capitalize">
+                        {selectedNode.type}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Path:</span>
-                      <span className="font-mono text-xs truncate">{selectedNode.data?.path}</span>
+                      <span className="font-mono text-xs truncate">
+                        {selectedNode.data?.path}
+                      </span>
                     </div>
                   </div>
                 ) : (

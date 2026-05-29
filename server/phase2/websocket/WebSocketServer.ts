@@ -35,8 +35,15 @@
 import { WebSocketServer as WSServer, WebSocket } from "ws";
 import { IncomingMessage, Server as HttpServer } from "http";
 import { v4 as uuidv4 } from "uuid";
-import { FileSystemWatcherService, FileEvent } from "../services/FileSystemWatcherService.js";
-import { ProcessManagerService, ProcessProgressEvent, ProcessLifecycleEvent } from "../services/ProcessManagerService.js";
+import {
+  FileSystemWatcherService,
+  FileEvent,
+} from "../services/FileSystemWatcherService.js";
+import {
+  ProcessManagerService,
+  ProcessProgressEvent,
+  ProcessLifecycleEvent,
+} from "../services/ProcessManagerService.js";
 import { HashTrackerService } from "../services/HashTrackerService.js";
 import { VoiceService, VoiceEventData } from "../services/VoiceService.js";
 import { HITLApprovalService } from "../services/HITLApprovalService.js";
@@ -55,8 +62,17 @@ interface ClientMessage {
 
 /** WebSocket message from server to client */
 interface ServerMessage {
-  type: "fileEvent" | "trainingProgress" | "lifecycle" | "loopDetected" |
-        "pong" | "error" | "subscribed" | "unsubscribed" | "state";
+  type:
+    | "fileEvent"
+    | "trainingProgress"
+    | "lifecycle"
+    | "loopDetected"
+    | "pong"
+    | "error"
+    | "subscribed"
+    | "unsubscribed"
+    | "state"
+    | "actionPending";
   channel?: string;
   data?: any;
   timestamp?: string;
@@ -119,7 +135,9 @@ export class OmnecorWebSocketServer {
     this.hitlService = HITLApprovalService.getInstance();
 
     // Wire up connection handling
-    this.wss.on("connection", (ws, req) => this.handleConnection(ws as OmnecorSocket, req));
+    this.wss.on("connection", (ws, req) =>
+      this.handleConnection(ws as OmnecorSocket, req)
+    );
 
     // Wire up service event listeners
     this.wireServiceEvents();
@@ -146,11 +164,11 @@ export class OmnecorWebSocketServer {
 
     console.log(
       `[Omnecor WS] Client connected: id="${ws.id}" ip="${req.socket.remoteAddress}" ` +
-      `total=${this.clients.size}`
+        `total=${this.clients.size}`
     );
 
     // Handle incoming messages
-    ws.on("message", (raw) => {
+    ws.on("message", raw => {
       try {
         const message: ClientMessage = JSON.parse(raw.toString());
         this.handleClientMessage(ws, message);
@@ -176,7 +194,7 @@ export class OmnecorWebSocketServer {
     });
 
     // Handle errors
-    ws.on("error", (err) => {
+    ws.on("error", err => {
       console.error(`[Omnecor WS] Client error: id="${ws.id}"`, err.message);
       this.clients.delete(ws.id);
     });
@@ -247,7 +265,7 @@ export class OmnecorWebSocketServer {
         // Hardware jobs → hardware:{jobId} channel
         const hwChannel = `hardware:${event.jobId}`;
         this.broadcastToChannel(hwChannel, {
-          type: "trainingProgress",  // reuse type for consistency; frontend filters by channel
+          type: "trainingProgress", // reuse type for consistency; frontend filters by channel
           channel: hwChannel,
           data: event,
           timestamp: event.timestamp,
@@ -391,7 +409,10 @@ export class OmnecorWebSocketServer {
     const payload = JSON.stringify(message);
 
     for (const client of this.clients.values()) {
-      if (client.subscriptions.has(channel) && client.readyState === WebSocket.OPEN) {
+      if (
+        client.subscriptions.has(channel) &&
+        client.readyState === WebSocket.OPEN
+      ) {
         client.send(payload);
       }
     }
@@ -422,8 +443,9 @@ export class OmnecorWebSocketServer {
     // For file channels, send the current file tree
     if (channel.startsWith("files:")) {
       const projectId = channel.replace("files:", "");
-      this.fileWatcher.getFileTree(projectId)
-        .then((files) => {
+      this.fileWatcher
+        .getFileTree(projectId)
+        .then(files => {
           this.sendToClient(ws, {
             type: "state",
             channel,
@@ -433,7 +455,9 @@ export class OmnecorWebSocketServer {
         .catch(() => {
           this.sendToClient(ws, {
             type: "error",
-            data: { message: `No watcher registered for project: ${projectId}` },
+            data: {
+              message: `No watcher registered for project: ${projectId}`,
+            },
           });
         });
     }
@@ -476,17 +500,27 @@ export class OmnecorWebSocketServer {
   // -------------------------------------------------------------------------
 
   /** Verify WebSocket connection origin */
-  private verifyClient(info: { origin: string; secure: boolean; req: IncomingMessage }): boolean {
+  private verifyClient(info: {
+    origin: string;
+    secure: boolean;
+    req: IncomingMessage;
+  }): boolean {
     // In development/local mode, allow all connections
     const origin = info.origin || info.req.headers.origin || "";
 
     // Allow localhost connections
-    if (!origin || origin.includes("localhost") || origin.includes("127.0.0.1")) {
+    if (
+      !origin ||
+      origin.includes("localhost") ||
+      origin.includes("127.0.0.1")
+    ) {
       return true;
     }
 
     // Check against configured CORS origins
-    return SERVER_CONFIG.corsOrigins.some((allowed) => origin.startsWith(allowed));
+    return SERVER_CONFIG.corsOrigins.some(allowed =>
+      origin.startsWith(allowed)
+    );
   }
 
   // -------------------------------------------------------------------------
@@ -530,7 +564,7 @@ export class OmnecorWebSocketServer {
     this.clients.clear();
 
     // Close the server
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.wss.close(() => {
         console.log("[Omnecor WS] WebSocket server shut down.");
         resolve();

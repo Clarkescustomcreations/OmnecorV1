@@ -42,20 +42,22 @@ function App() {
     // Initialize keyboard shortcuts on mount
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ctrl+K: Focus search
-      if (e.ctrlKey && e.key === 'k') {
+      if (e.ctrlKey && e.key === "k") {
         e.preventDefault();
-        const searchInput = document.querySelector('input[placeholder*="search"]') as HTMLInputElement;
+        const searchInput = document.querySelector(
+          'input[placeholder*="search"]'
+        ) as HTMLInputElement;
         if (searchInput) searchInput.focus();
       }
       // Shift+?: Show help
-      if (e.shiftKey && e.key === '?') {
+      if (e.shiftKey && e.key === "?") {
         e.preventDefault();
-        alert('Keyboard shortcuts help - see documentation for full list');
+        alert("Keyboard shortcuts help - see documentation for full list");
       }
     };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (

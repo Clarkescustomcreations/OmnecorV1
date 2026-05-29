@@ -23,6 +23,6 @@
 
 throw new Error(
   "[Omnecor] server/phase2/app.ts is DEPRECATED. " +
-  "The standalone Phase 2 server has been merged into the main server. " +
-  "Start the application with: npx tsx server/_core/index.ts"
+    "The standalone Phase 2 server has been merged into the main server. " +
+    "Start the application with: npx tsx server/_core/index.ts"
 );

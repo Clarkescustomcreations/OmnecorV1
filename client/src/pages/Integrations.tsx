@@ -4,7 +4,7 @@ import { Plug } from "lucide-react";
 
 /**
  * Integrations Page
- * 
+ *
  * Manages OAuth-based account linking for:
  * - GitHub (repositories, code integration)
  * - Notion (knowledge base, documentation)

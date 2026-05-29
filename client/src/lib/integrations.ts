@@ -1,6 +1,6 @@
 /**
  * Third-Party Integrations Hub
- * 
+ *
  * Manages OAuth-based account linking for:
  * - GitHub (repositories, code integration)
  * - Notion (knowledge base, documentation)
@@ -9,7 +9,14 @@
  * - Generic OAuth Providers (custom API integrations)
  */
 
-export type IntegrationType = "github" | "notion" | "slack" | "google-drive" | "dropbox" | "onedrive" | "generic";
+export type IntegrationType =
+  | "github"
+  | "notion"
+  | "slack"
+  | "google-drive"
+  | "dropbox"
+  | "onedrive"
+  | "generic";
 
 export interface OAuthConfig {
   clientId: string;
@@ -113,13 +120,16 @@ export interface CloudStorageIntegration extends Integration {
  * Get integration display info
  */
 export function getIntegrationInfo(type: IntegrationType) {
-  const integrationInfo: Record<IntegrationType, {
-    title: string;
-    description: string;
-    icon: string;
-    color: string;
-    scope: string[];
-  }> = {
+  const integrationInfo: Record<
+    IntegrationType,
+    {
+      title: string;
+      description: string;
+      icon: string;
+      color: string;
+      scope: string[];
+    }
+  > = {
     github: {
       title: "GitHub",
       description: "Connect your GitHub account for repository management",
@@ -276,7 +286,8 @@ export function updateIntegrationAction(
     progress,
     result,
     error,
-    completedAt: status === "completed" || status === "failed" ? new Date() : undefined,
+    completedAt:
+      status === "completed" || status === "failed" ? new Date() : undefined,
   };
 }
 
@@ -366,7 +377,8 @@ export function createMockGitHubIntegration(): GitHubIntegration {
         id: 2,
         name: "neural-map-visualizer",
         url: "https://github.com/omnecor/neural-map-visualizer",
-        description: "Spatial neural network visualization and graph management",
+        description:
+          "Spatial neural network visualization and graph management",
         isPrivate: true,
         lastPushed: new Date(Date.now() - 86400000),
       },

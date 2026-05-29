@@ -1,10 +1,10 @@
 /**
  * Omnecor Component Library
- * 
+ *
  * A comprehensive collection of reusable, accessible, and consistently-styled
  * components built on shadcn/ui and Tailwind CSS. All components follow the
  * dark OKLCH design system and are optimized for the AI workbench interface.
- * 
+ *
  * This library provides:
  * - Status indicators (success, warning, error, loading)
  * - File type icons and badges
@@ -14,34 +14,58 @@
  * - Tooltips and help text
  */
 
-import React from 'react';
-import { AlertCircle, CheckCircle, AlertTriangle, Loader2, FileText, Folder, Code, Image, Music, File } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
+import React from "react";
+import {
+  AlertCircle,
+  CheckCircle,
+  AlertTriangle,
+  Loader2,
+  FileText,
+  Folder,
+  Code,
+  Image,
+  Music,
+  File,
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 /**
  * Status Indicator Component
  * Shows the status of an operation or system state
  */
 export interface StatusIndicatorProps {
-  status: 'success' | 'warning' | 'error' | 'loading' | 'idle';
+  status: "success" | "warning" | "error" | "loading" | "idle";
   label?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
-export function StatusIndicator({ status, label, size = 'md' }: StatusIndicatorProps) {
+export function StatusIndicator({
+  status,
+  label,
+  size = "md",
+}: StatusIndicatorProps) {
   const sizeClasses = {
-    sm: 'w-2 h-2',
-    md: 'w-3 h-3',
-    lg: 'w-4 h-4',
+    sm: "w-2 h-2",
+    md: "w-3 h-3",
+    lg: "w-4 h-4",
   };
 
   const statusConfig = {
-    success: { color: 'bg-green-500', icon: CheckCircle, label: 'Success' },
-    warning: { color: 'bg-yellow-500', icon: AlertTriangle, label: 'Warning' },
-    error: { color: 'bg-red-500', icon: AlertCircle, label: 'Error' },
-    loading: { color: 'bg-blue-500 animate-pulse', icon: Loader2, label: 'Loading' },
-    idle: { color: 'bg-gray-500', icon: File, label: 'Idle' },
+    success: { color: "bg-green-500", icon: CheckCircle, label: "Success" },
+    warning: { color: "bg-yellow-500", icon: AlertTriangle, label: "Warning" },
+    error: { color: "bg-red-500", icon: AlertCircle, label: "Error" },
+    loading: {
+      color: "bg-blue-500 animate-pulse",
+      icon: Loader2,
+      label: "Loading",
+    },
+    idle: { color: "bg-gray-500", icon: File, label: "Idle" },
   };
 
   const config = statusConfig[status];
@@ -52,8 +76,12 @@ export function StatusIndicator({ status, label, size = 'md' }: StatusIndicatorP
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex items-center gap-2">
-            <div className={`${sizeClasses[size]} ${config.color} rounded-full`} />
-            {label && <span className="text-sm text-foreground/70">{label}</span>}
+            <div
+              className={`${sizeClasses[size]} ${config.color} rounded-full`}
+            />
+            {label && (
+              <span className="text-sm text-foreground/70">{label}</span>
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent>{config.label}</TooltipContent>
@@ -67,16 +95,20 @@ export function StatusIndicator({ status, label, size = 'md' }: StatusIndicatorP
  * Displays appropriate icon for different file types
  */
 export interface FileTypeIconProps {
-  fileType: 'folder' | 'text' | 'code' | 'image' | 'audio' | 'unknown';
-  size?: 'sm' | 'md' | 'lg';
+  fileType: "folder" | "text" | "code" | "image" | "audio" | "unknown";
+  size?: "sm" | "md" | "lg";
   className?: string;
 }
 
-export function FileTypeIcon({ fileType, size = 'md', className = '' }: FileTypeIconProps) {
+export function FileTypeIcon({
+  fileType,
+  size = "md",
+  className = "",
+}: FileTypeIconProps) {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6',
+    sm: "w-4 h-4",
+    md: "w-5 h-5",
+    lg: "w-6 h-6",
   };
 
   const icons = {
@@ -89,7 +121,7 @@ export function FileTypeIcon({ fileType, size = 'md', className = '' }: FileType
   };
 
   const Icon = icons[fileType];
-  const colorClass = fileType === 'folder' ? 'text-blue-400' : 'text-gray-400';
+  const colorClass = fileType === "folder" ? "text-blue-400" : "text-gray-400";
 
   return <Icon className={`${sizeClasses[size]} ${colorClass} ${className}`} />;
 }
@@ -99,18 +131,18 @@ export function FileTypeIcon({ fileType, size = 'md', className = '' }: FileType
  * Shows file type with icon and label
  */
 export interface FileTypeBadgeProps {
-  fileType: 'folder' | 'text' | 'code' | 'image' | 'audio' | 'unknown';
+  fileType: "folder" | "text" | "code" | "image" | "audio" | "unknown";
   label?: string;
 }
 
 export function FileTypeBadge({ fileType, label }: FileTypeBadgeProps) {
   const typeLabels = {
-    folder: 'Folder',
-    text: 'Text',
-    code: 'Code',
-    image: 'Image',
-    audio: 'Audio',
-    unknown: 'File',
+    folder: "Folder",
+    text: "Text",
+    code: "Code",
+    image: "Image",
+    audio: "Audio",
+    unknown: "File",
   };
 
   return (
@@ -131,7 +163,11 @@ export interface SkeletonProps {
   className?: string;
 }
 
-export function Skeleton({ width = 'w-full', height = 'h-4', className = '' }: SkeletonProps) {
+export function Skeleton({
+  width = "w-full",
+  height = "h-4",
+  className = "",
+}: SkeletonProps) {
   return (
     <div
       className={`${width} ${height} bg-gradient-to-r from-background via-muted to-background animate-pulse rounded ${className}`}
@@ -164,7 +200,10 @@ export interface ErrorBoundaryProps {
 }
 
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
-  state: { hasError: boolean; error: Error | null } = { hasError: false, error: null };
+  state: { hasError: boolean; error: Error | null } = {
+    hasError: false,
+    error: null,
+  };
 
   static getDerivedStateFromError(error: Error) {
     return { hasError: true, error };
@@ -181,8 +220,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
           <div className="p-4 bg-red-900/20 border border-red-700 rounded-lg flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-red-400">Something went wrong</h3>
-              <p className="text-sm text-red-300 mt-1">{this.state.error?.message}</p>
+              <h3 className="font-semibold text-red-400">
+                Something went wrong
+              </h3>
+              <p className="text-sm text-red-300 mt-1">
+                {this.state.error?.message}
+              </p>
             </div>
           </div>
         )
@@ -200,10 +243,14 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
 export interface HelpTooltipProps {
   children: React.ReactNode;
   content: string;
-  side?: 'top' | 'right' | 'bottom' | 'left';
+  side?: "top" | "right" | "bottom" | "left";
 }
 
-export function HelpTooltip({ children, content, side = 'top' }: HelpTooltipProps) {
+export function HelpTooltip({
+  children,
+  content,
+  side = "top",
+}: HelpTooltipProps) {
   return (
     <TooltipProvider>
       <Tooltip>
@@ -227,12 +274,19 @@ export interface EmptyStateProps {
   action?: React.ReactNode;
 }
 
-export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+}: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
       {icon && <div className="mb-4 text-muted-foreground">{icon}</div>}
       <h3 className="text-lg font-semibold text-foreground mb-2">{title}</h3>
-      {description && <p className="text-sm text-muted-foreground mb-4">{description}</p>}
+      {description && (
+        <p className="text-sm text-muted-foreground mb-4">{description}</p>
+      )}
       {action && <div>{action}</div>}
     </div>
   );
@@ -243,16 +297,16 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
  * Shows operation status with color coding
  */
 export interface StatusBadgeProps {
-  status: 'active' | 'inactive' | 'pending' | 'error';
+  status: "active" | "inactive" | "pending" | "error";
   label: string;
 }
 
 export function StatusBadge({ status, label }: StatusBadgeProps) {
   const statusConfig = {
-    active: 'bg-green-900/30 text-green-400 border-green-700',
-    inactive: 'bg-gray-900/30 text-gray-400 border-gray-700',
-    pending: 'bg-yellow-900/30 text-yellow-400 border-yellow-700',
-    error: 'bg-red-900/30 text-red-400 border-red-700',
+    active: "bg-green-900/30 text-green-400 border-green-700",
+    inactive: "bg-gray-900/30 text-gray-400 border-gray-700",
+    pending: "bg-yellow-900/30 text-yellow-400 border-yellow-700",
+    error: "bg-red-900/30 text-red-400 border-red-700",
   };
 
   return (
@@ -277,7 +331,9 @@ export function KeyboardShortcut({ keys, label }: KeyboardShortcutProps) {
       <div className="flex gap-1">
         {keys.map((key, idx) => (
           <React.Fragment key={idx}>
-            {idx > 0 && <span className="text-xs text-muted-foreground">+</span>}
+            {idx > 0 && (
+              <span className="text-xs text-muted-foreground">+</span>
+            )}
             <kbd className="px-2 py-1 text-xs font-semibold text-foreground bg-muted border border-border rounded">
               {key}
             </kbd>
@@ -306,8 +362,8 @@ export interface ConfirmationDialogProps {
 export function ConfirmationDialog({
   title,
   description,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
   onConfirm,
   onCancel,
   isDangerous = false,
@@ -328,8 +384,8 @@ export function ConfirmationDialog({
             onClick={onConfirm}
             className={`px-4 py-2 text-sm font-medium text-white rounded transition-colors ${
               isDangerous
-                ? 'bg-red-600 hover:bg-red-700'
-                : 'bg-blue-600 hover:bg-blue-700'
+                ? "bg-red-600 hover:bg-red-700"
+                : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
             {confirmLabel}

@@ -1,6 +1,6 @@
 /**
  * Action Hash Loop Detector
- * 
+ *
  * Prevents runaway token burn by detecting repetitive agent loops.
  * When 3 identical consecutive action hashes are detected, triggers
  * a human-in-the-loop (HITL) alert to pause execution.
@@ -43,7 +43,7 @@ export interface HITLAlert {
 
 /**
  * Generate a hash for an action (tool + args + state)
- * 
+ *
  * The hash is deterministic based on the action's tool, arguments, and current state.
  * This allows us to detect when the same action is being repeated.
  */
@@ -72,7 +72,7 @@ function sortObjectKeys(obj: unknown): unknown {
   const sorted: Record<string, unknown> = {};
   Object.keys(obj as Record<string, unknown>)
     .sort()
-    .forEach((key) => {
+    .forEach(key => {
       sorted[key] = sortObjectKeys((obj as Record<string, unknown>)[key]);
     });
 
@@ -100,54 +100,52 @@ export function createActionRecord(
 
 /**
  * Detect loops in action history
- * 
- * Returns true if 3 identical consecutive hashes are found.
- * Threshold is exactly 3 as specified in requirements.
+ *
+ * Returns true if 3 or more identical consecutive hashes are found.
+ * Threshold is 3 as specified in requirements.
  */
 export function detectLoop(history: ActionRecord[]): LoopDetectionResult {
   const LOOP_THRESHOLD = 3;
 
-  if (history.length < LOOP_THRESHOLD) {
+  if (history.length === 0) {
     return {
       isLoopDetected: false,
       consecutiveCount: 0,
-      lastHash: history.length > 0 ? history[history.length - 1].hash : null,
+      lastHash: null,
       actionHistory: history,
       recommendation: "Monitoring for loops...",
     };
   }
 
-  // Check last 3 actions
-  const lastThree = history.slice(-LOOP_THRESHOLD);
-  const hashes = lastThree.map((record) => record.hash);
-
-  const isLoop = hashes[0] === hashes[1] && hashes[1] === hashes[2];
-
-  if (isLoop) {
-    return {
-      isLoopDetected: true,
-      consecutiveCount: LOOP_THRESHOLD,
-      lastHash: hashes[0],
-      actionHistory: history,
-      recommendation:
-        "Loop detected! The agent is repeating the same action. Consider modifying the action parameters or aborting the operation.",
-    };
-  }
-
   // Count consecutive identical hashes from the end
   let consecutiveCount = 1;
+  const lastHash = history[history.length - 1].hash;
+
   for (let i = history.length - 2; i >= 0; i--) {
-    if (history[i].hash === history[i + 1].hash) {
+    if (history[i].hash === lastHash) {
       consecutiveCount++;
     } else {
       break;
     }
   }
 
+  const isLoopDetected = consecutiveCount >= LOOP_THRESHOLD;
+
+  if (isLoopDetected) {
+    return {
+      isLoopDetected: true,
+      consecutiveCount,
+      lastHash,
+      actionHistory: history,
+      recommendation:
+        `Loop detected! The agent has repeated the same action ${consecutiveCount} times. Consider modifying the action parameters or aborting the operation.`,
+    };
+  }
+
   return {
     isLoopDetected: false,
     consecutiveCount,
-    lastHash: history[history.length - 1].hash,
+    lastHash,
     actionHistory: history,
     recommendation:
       consecutiveCount >= 2
@@ -163,7 +161,8 @@ export function createHITLAlert(
   loopDetection: LoopDetectionResult,
   severity: "warning" | "critical" = "critical"
 ): HITLAlert {
-  const repeatedAction = loopDetection.actionHistory[loopDetection.actionHistory.length - 1];
+  const repeatedAction =
+    loopDetection.actionHistory[loopDetection.actionHistory.length - 1];
 
   return {
     id: `hitl_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -211,11 +210,11 @@ export function getLoopStatistics(history: ActionRecord[]): {
   mostRepeatedAction: { tool: string; count: number } | null;
   loopsDetected: number;
 } {
-  const uniqueHashes = new Set(history.map((r) => r.hash)).size;
+  const uniqueHashes = new Set(history.map(r => r.hash)).size;
 
   // Find most repeated action
   const toolCounts: Record<string, number> = {};
-  history.forEach((record) => {
+  history.forEach(record => {
     toolCounts[record.tool] = (toolCounts[record.tool] || 0) + 1;
   });
 

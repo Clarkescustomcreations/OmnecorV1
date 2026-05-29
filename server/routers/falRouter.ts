@@ -43,7 +43,10 @@ export const falRouter = router({
     .input(generateCharacterSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        return await ctx.services.fal.generateCharacter(input.prompt, input.loraPath);
+        return await ctx.services.fal.generateCharacter(
+          input.prompt,
+          input.loraPath
+        );
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -59,7 +62,10 @@ export const falRouter = router({
     .input(generateVideoSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        return await ctx.services.fal.generateVideo(input.imageUrl, input.prompt);
+        return await ctx.services.fal.generateVideo(
+          input.imageUrl,
+          input.prompt
+        );
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

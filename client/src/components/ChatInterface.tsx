@@ -1,5 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,7 +25,7 @@ interface ChatInterfaceProps {
 
 /**
  * Chat Interface Component
- * 
+ *
  * Full-featured chat UI with:
  * - Message history display
  * - Streaming response support
@@ -105,11 +111,13 @@ export default function ChatInterface({
             <div className="flex items-center justify-center h-64 text-center text-muted-foreground">
               <div>
                 <p className="text-sm mb-2">No messages yet</p>
-                <p className="text-xs">Start a conversation by typing a message below</p>
+                <p className="text-xs">
+                  Start a conversation by typing a message below
+                </p>
               </div>
             </div>
           ) : (
-            messages.map((message) => (
+            messages.map(message => (
               <div
                 key={message.id}
                 className={cn(
@@ -130,7 +138,9 @@ export default function ChatInterface({
                     {message.role === "assistant" ? (
                       <Streamdown>{message.content}</Streamdown>
                     ) : (
-                      <p className="whitespace-pre-wrap break-words">{message.content}</p>
+                      <p className="whitespace-pre-wrap break-words">
+                        {message.content}
+                      </p>
                     )}
                   </div>
 
@@ -159,7 +169,9 @@ export default function ChatInterface({
                   {/* Error Display */}
                   {message.metadata?.error && (
                     <div className="mt-2 p-2 rounded bg-destructive/10 border border-destructive/30">
-                      <p className="text-xs text-destructive">{message.metadata.error}</p>
+                      <p className="text-xs text-destructive">
+                        {message.metadata.error}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -176,7 +188,7 @@ export default function ChatInterface({
           <Input
             placeholder="Type your message... (Shift+Enter for new line)"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isLoading}
             className="flex-1"
@@ -194,7 +206,9 @@ export default function ChatInterface({
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          {isLoading ? "AI is thinking..." : "Press Enter to send, Shift+Enter for new line"}
+          {isLoading
+            ? "AI is thinking..."
+            : "Press Enter to send, Shift+Enter for new line"}
         </p>
       </div>
     </Card>

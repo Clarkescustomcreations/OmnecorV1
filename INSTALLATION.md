@@ -5,6 +5,7 @@
 ## System Requirements
 
 ### Minimum Requirements
+
 - **OS:** Debian 12 or Ubuntu 20.04+
 - **CPU:** 4+ cores
 - **RAM:** 8GB (16GB+ recommended for local AI models)
@@ -12,6 +13,7 @@
 - **Internet:** Required for cloud-provider API access
 
 ### Recommended Setup
+
 - **OS:** Ubuntu 24.04 LTS
 - **CPU:** 8+ cores
 - **RAM:** 32GB+
@@ -89,9 +91,11 @@ The application will be available at `http://localhost:3000`.
 ## Troubleshooting
 
 ### Port Already in Use
+
 If port 3000 is occupied, change the `PORT` in your `.env` file.
 
 ### GPU Acceleration
+
 Ensure NVIDIA drivers and CUDA toolkit are installed for hardware-accelerated model inference.
 
 ## Support

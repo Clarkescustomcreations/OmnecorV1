@@ -1,5 +1,11 @@
 import OmnecorDashboardLayout from "@/components/OmnecorDashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Zap, Plus, RefreshCw } from "lucide-react";
 import { useState } from "react";
@@ -14,15 +20,20 @@ export default function ModelHub() {
   const [selectedModel, setSelectedModel] = useState<AIModel | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { data: ollamaModels = [], isLoading: ollamaLoading, refetch } =
-    trpc.aiProvider.discoverOllamaModels.useQuery(undefined, {
-      refetchInterval: 30_000,
-    });
+  const {
+    data: ollamaModels = [],
+    isLoading: ollamaLoading,
+    refetch,
+  } = trpc.aiProvider.discoverOllamaModels.useQuery(undefined, {
+    refetchInterval: 30_000,
+  });
 
-  const { data: providerHealth = [] } =
-    trpc.aiProvider.getProviders.useQuery(undefined, {
+  const { data: providerHealth = [] } = trpc.aiProvider.getProviders.useQuery(
+    undefined,
+    {
       refetchInterval: 60_000,
-    });
+    }
+  );
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -32,12 +43,15 @@ export default function ModelHub() {
 
   const handleModelSelect = (model: AIModel) => {
     setSelectedModel(model);
-    localStorage.setItem('omnecor:selectedModel', JSON.stringify({
-      providerId: model.source,
-      modelId: model.id,
-      apiKey: (model as any).apiKey, // Assuming this might be in the model object
-      baseUrl: (model as any).endpoint,
-    }));
+    localStorage.setItem(
+      "omnecor:selectedModel",
+      JSON.stringify({
+        providerId: model.source,
+        modelId: model.id,
+        apiKey: (model as any).apiKey, // Assuming this might be in the model object
+        baseUrl: (model as any).endpoint,
+      })
+    );
   };
 
   const handleModelDownload = (item: ModelMarketplaceItem) => {
@@ -48,22 +62,24 @@ export default function ModelHub() {
     id: m.name,
     name: m.name,
     displayName: m.name,
-    type: 'local' as const,
-    source: 'ollama' as const,
-    status: 'available' as const,
+    type: "local" as const,
+    source: "ollama" as const,
+    status: "available" as const,
     size: m.size ?? 0,
-    contextWindow: m.details?.parameter_size ? parseInt(m.details.parameter_size) : undefined,
+    contextWindow: m.details?.parameter_size
+      ? parseInt(m.details.parameter_size)
+      : undefined,
   }));
 
   const apiModels: AIModel[] = providerHealth
-    .filter(p => p.providerId !== 'ollama')
+    .filter(p => p.providerId !== "ollama")
     .map(p => ({
       id: p.providerId,
       name: p.providerId,
       displayName: p.providerId.charAt(0).toUpperCase() + p.providerId.slice(1),
-      type: 'api' as const,
-      source: p.providerId as AIModel['source'],
-      status: p.available ? 'available' : 'offline' as const,
+      type: "api" as const,
+      source: p.providerId as AIModel["source"],
+      status: p.available ? "available" : ("offline" as const),
     }));
 
   const allModels = [...localModels, ...apiModels];
@@ -90,7 +106,9 @@ export default function ModelHub() {
                 onClick={handleRefresh}
                 disabled={isRefreshing || ollamaLoading}
               >
-                <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+                <RefreshCw
+                  className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
+                />
                 {isRefreshing ? "Refreshing..." : "Refresh"}
               </Button>
               <Button size="sm">
@@ -113,7 +131,11 @@ export default function ModelHub() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1 overflow-hidden">
-                {ollamaLoading && <p className="text-sm text-muted-foreground">Discovering Ollama models…</p>}
+                {ollamaLoading && (
+                  <p className="text-sm text-muted-foreground">
+                    Discovering Ollama models…
+                  </p>
+                )}
                 <ModelHubPanel
                   onModelSelect={handleModelSelect}
                   onModelDownload={handleModelDownload}
@@ -137,20 +159,32 @@ export default function ModelHub() {
                   <div className="space-y-3 text-sm">
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Name</p>
-                      <p className="font-mono font-medium">{selectedModel.displayName}</p>
+                      <p className="font-mono font-medium">
+                        {selectedModel.displayName}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Type</p>
-                      <p className="font-mono capitalize">{selectedModel.type}</p>
+                      <p className="font-mono capitalize">
+                        {selectedModel.type}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-xs text-muted-foreground mb-1">Status</p>
-                      <p className="font-mono capitalize">{selectedModel.status}</p>
+                      <p className="text-xs text-muted-foreground mb-1">
+                        Status
+                      </p>
+                      <p className="font-mono capitalize">
+                        {selectedModel.status}
+                      </p>
                     </div>
                     {selectedModel.contextWindow && (
                       <div>
-                        <p className="text-xs text-muted-foreground mb-1">Context Window</p>
-                        <p className="font-mono">{selectedModel.contextWindow.toLocaleString()} tokens</p>
+                        <p className="text-xs text-muted-foreground mb-1">
+                          Context Window
+                        </p>
+                        <p className="font-mono">
+                          {selectedModel.contextWindow.toLocaleString()} tokens
+                        </p>
                       </div>
                     )}
                     <Button className="w-full mt-4" size="sm">
@@ -177,15 +211,21 @@ export default function ModelHub() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Total Models:</span>
-                    <span className="font-mono font-medium">{allModels.length}</span>
+                    <span className="font-mono font-medium">
+                      {allModels.length}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Local Models:</span>
-                    <span className="font-mono font-medium">{localModels.length}</span>
+                    <span className="font-mono font-medium">
+                      {localModels.length}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">API Models:</span>
-                    <span className="font-mono font-medium">{apiModels.length}</span>
+                    <span className="font-mono font-medium">
+                      {apiModels.length}
+                    </span>
                   </div>
                 </div>
               </CardContent>

@@ -14,6 +14,11 @@
  */
 
 // Re-export everything from the unified tRPC stack
-export { router, publicProcedure, protectedProcedure, adminProcedure } from "../../_core/trpc";
+export {
+  router,
+  publicProcedure,
+  protectedProcedure,
+  adminProcedure,
+} from "../../_core/trpc";
 export { createContext } from "../../_core/context";
 export type { TrpcContext as OmnecorContext } from "../../_core/context";

@@ -118,7 +118,7 @@ export interface RestoreResult {
 
 const ENCRYPTION_ALGORITHM = "aes-256-gcm";
 const KEY_LENGTH = 32; // 256 bits
-const IV_LENGTH = 16;  // 128 bits for GCM
+const IV_LENGTH = 16; // 128 bits for GCM
 const SALT_LENGTH = 32;
 const SCRYPT_N = 16384; // CPU/memory cost parameter
 const SCRYPT_R = 8;
@@ -133,8 +133,19 @@ const DANGEROUS_SIGNATURES: Array<{ name: string; bytes: number[] }> = [
 
 /** File extensions that require extra scrutiny */
 const SUSPICIOUS_EXTENSIONS = new Set([
-  ".exe", ".dll", ".so", ".dylib", ".bat", ".cmd", ".ps1",
-  ".vbs", ".js", ".msi", ".scr", ".com", ".pif",
+  ".exe",
+  ".dll",
+  ".so",
+  ".dylib",
+  ".bat",
+  ".cmd",
+  ".ps1",
+  ".vbs",
+  ".js",
+  ".msi",
+  ".scr",
+  ".com",
+  ".pif",
 ]);
 
 // ---------------------------------------------------------------------------
@@ -236,7 +247,9 @@ export class SecurityService {
     for (const sig of DANGEROUS_SIGNATURES) {
       const matches = sig.bytes.every((byte, i) => headerBuffer[i] === byte);
       if (matches && !SUSPICIOUS_EXTENSIONS.has(ext)) {
-        threats.push(`Hidden ${sig.name} detected (extension mismatch: ${ext})`);
+        threats.push(
+          `Hidden ${sig.name} detected (extension mismatch: ${ext})`
+        );
       }
     }
 
@@ -270,7 +283,10 @@ export class SecurityService {
    */
   async scanDirectory(dirPath: string): Promise<FileScanResult[]> {
     const results: FileScanResult[] = [];
-    const entries = await fs.readdir(dirPath, { withFileTypes: true, recursive: true });
+    const entries = await fs.readdir(dirPath, {
+      withFileTypes: true,
+      recursive: true,
+    });
 
     for (const entry of entries) {
       if (entry.isFile()) {
@@ -308,7 +324,10 @@ export class SecurityService {
    */
   async encryptFile(filePath: string, passphrase: string): Promise<string> {
     const plaintext = await fs.readFile(filePath);
-    const { encrypted, salt, iv, authTag } = this.encrypt(plaintext, passphrase);
+    const { encrypted, salt, iv, authTag } = this.encrypt(
+      plaintext,
+      passphrase
+    );
 
     // Write encrypted file with header: [salt(32)][iv(16)][authTag(16)][ciphertext]
     const outputPath = `${filePath}.enc`;
@@ -325,13 +344,19 @@ export class SecurityService {
    * @param passphrase    - User passphrase used during encryption
    * @returns Path to the decrypted file
    */
-  async decryptFile(encryptedPath: string, passphrase: string): Promise<string> {
+  async decryptFile(
+    encryptedPath: string,
+    passphrase: string
+  ): Promise<string> {
     const data = await fs.readFile(encryptedPath);
 
     // Parse header: [salt(32)][iv(16)][authTag(16)][ciphertext]
     const salt = data.subarray(0, SALT_LENGTH);
     const iv = data.subarray(SALT_LENGTH, SALT_LENGTH + IV_LENGTH);
-    const authTag = data.subarray(SALT_LENGTH + IV_LENGTH, SALT_LENGTH + IV_LENGTH + 16);
+    const authTag = data.subarray(
+      SALT_LENGTH + IV_LENGTH,
+      SALT_LENGTH + IV_LENGTH + 16
+    );
     const ciphertext = data.subarray(SALT_LENGTH + IV_LENGTH + 16);
 
     const decrypted = this.decrypt(ciphertext, passphrase, salt, iv, authTag);
@@ -351,14 +376,20 @@ export class SecurityService {
    * @param passphrase - User passphrase to protect the key
    * @returns Key metadata
    */
-  async generateProjectKey(projectId: string, passphrase: string): Promise<KeyMetadata> {
+  async generateProjectKey(
+    projectId: string,
+    passphrase: string
+  ): Promise<KeyMetadata> {
     await this.initialize();
 
     // Generate a random 256-bit key
     const projectKey = crypto.randomBytes(KEY_LENGTH);
 
     // Encrypt the project key with the user's passphrase
-    const { encrypted, salt, iv, authTag } = this.encrypt(projectKey, passphrase);
+    const { encrypted, salt, iv, authTag } = this.encrypt(
+      projectKey,
+      passphrase
+    );
 
     const metadata: KeyMetadata = {
       keyId: crypto.randomUUID(),
@@ -373,7 +404,9 @@ export class SecurityService {
 
     // Store key metadata
     const keyFile = path.join(this.keyStorePath, `${projectId}.key.json`);
-    await fs.writeFile(keyFile, JSON.stringify(metadata, null, 2), { mode: 0o600 });
+    await fs.writeFile(keyFile, JSON.stringify(metadata, null, 2), {
+      mode: 0o600,
+    });
 
     // Zero the plaintext key from memory
     projectKey.fill(0);
@@ -500,7 +533,9 @@ export class SecurityService {
     try {
       await fs.access(archivePath);
     } catch {
-      throw new Error(`[Omnecor Security] Backup archive not found: ${archivePath}`);
+      throw new Error(
+        `[Omnecor Security] Backup archive not found: ${archivePath}`
+      );
     }
 
     let extractPath = archivePath;
@@ -517,14 +552,19 @@ export class SecurityService {
     }
 
     // Verify integrity via manifest if available
-    const manifestPath = archivePath.replace(/\.tar\.gz(\.enc)?$/, ".manifest.json");
+    const manifestPath = archivePath.replace(
+      /\.tar\.gz(\.enc)?$/,
+      ".manifest.json"
+    );
     try {
       const manifestContent = await fs.readFile(manifestPath, "utf-8");
       const manifest: BackupManifest = JSON.parse(manifestContent);
       const currentHash = await this.computeFileHash(extractPath);
 
       if (manifest.checksum && currentHash !== manifest.checksum) {
-        errors.push("Warning: Archive checksum mismatch — file may be corrupted");
+        errors.push(
+          "Warning: Archive checksum mismatch — file may be corrupted"
+        );
       }
     } catch {
       // No manifest available — proceed without verification
@@ -535,10 +575,9 @@ export class SecurityService {
     await fs.mkdir(targetDir, { recursive: true });
 
     // Extract archive
-    await execAsync(
-      `tar -xzf "${extractPath}" -C "${targetDir}"`,
-      { maxBuffer: 50 * 1024 * 1024 }
-    );
+    await execAsync(`tar -xzf "${extractPath}" -C "${targetDir}"`, {
+      maxBuffer: 50 * 1024 * 1024,
+    });
 
     // Count restored files
     const { stdout } = await execAsync(`find "${targetDir}" -type f | wc -l`);
@@ -574,7 +613,10 @@ export class SecurityService {
 
       for (const file of files) {
         if (file.includes(projectId) && file.endsWith(".manifest.json")) {
-          const content = await fs.readFile(path.join(backupDir, file), "utf-8");
+          const content = await fs.readFile(
+            path.join(backupDir, file),
+            "utf-8"
+          );
           manifests.push(JSON.parse(content));
         }
       }
@@ -632,7 +674,10 @@ export class SecurityService {
     const decipher = crypto.createDecipheriv(ENCRYPTION_ALGORITHM, key, iv);
     decipher.setAuthTag(authTag);
 
-    const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
+    const decrypted = Buffer.concat([
+      decipher.update(ciphertext),
+      decipher.final(),
+    ]);
 
     // Zero the key from memory
     key.fill(0);
@@ -654,7 +699,8 @@ export class SecurityService {
     if (header[0] === 0x25 && header[1] === 0x50) return "application/pdf";
     if (header[0] === 0x50 && header[1] === 0x4b) return "application/zip";
     if (header[0] === 0x7f && header[1] === 0x45) return "application/x-elf";
-    if (header[0] === 0x4d && header[1] === 0x5a) return "application/x-msdos-program";
+    if (header[0] === 0x4d && header[1] === 0x5a)
+      return "application/x-msdos-program";
 
     // Fall back to extension-based detection
     const extMap: Record<string, string> = {
@@ -680,7 +726,10 @@ export class SecurityService {
     const files: BackupManifest["files"] = [];
     let totalSize = 0;
 
-    const entries = await fs.readdir(sourceDir, { withFileTypes: true, recursive: true });
+    const entries = await fs.readdir(sourceDir, {
+      withFileTypes: true,
+      recursive: true,
+    });
 
     for (const entry of entries) {
       if (entry.isFile()) {

@@ -48,7 +48,10 @@ export const blenderRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         const validatedPath = await validatePath(input.scriptPath);
-        const jobId = await ctx.services.blender.executeScript({ ...input, scriptPath: validatedPath });
+        const jobId = await ctx.services.blender.executeScript({
+          ...input,
+          scriptPath: validatedPath,
+        });
         return { success: true, jobId };
       } catch (error) {
         throw new TRPCError({
@@ -63,8 +66,14 @@ export const blenderRouter = router({
     .input(blenderRenderSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const validatedBlend = input.blendFile ? await validatePath(input.blendFile) : undefined;
-        const jobId = await ctx.services.blender.render(validatedBlend, input.outputPath, input.label);
+        const validatedBlend = input.blendFile
+          ? await validatePath(input.blendFile)
+          : undefined;
+        const jobId = await ctx.services.blender.render(
+          validatedBlend,
+          input.outputPath,
+          input.label
+        );
         return {
           success: true,
           jobId,
@@ -83,7 +92,10 @@ export const blenderRouter = router({
     .input(blenderExportSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const jobId = await ctx.services.blender.exportFile(input.blendFile, input.outputPath);
+        const jobId = await ctx.services.blender.exportFile(
+          input.blendFile,
+          input.outputPath
+        );
         return { success: true, jobId };
       } catch (error) {
         throw new TRPCError({

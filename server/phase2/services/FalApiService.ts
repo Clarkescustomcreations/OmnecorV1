@@ -25,9 +25,9 @@ export class FalApiService {
     // This assumes the Python bridge is running as a FastAPI service
     // We would typically communicate with it via HTTP requests
     const response = await fetch("http://localhost:8004/flux-character", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, lora_path: loraPath })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt, lora_path: loraPath }),
     });
     const data = await response.json();
     return data.result.image.url;
@@ -35,9 +35,9 @@ export class FalApiService {
 
   async generateVideo(imageUrl: string, prompt: string): Promise<string> {
     const response = await fetch("http://localhost:8004/minimax-video", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_url: imageUrl, prompt })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image_url: imageUrl, prompt }),
     });
     const data = await response.json();
     return data.result.video.url;

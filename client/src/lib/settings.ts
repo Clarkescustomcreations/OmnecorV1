@@ -1,6 +1,6 @@
 /**
  * Settings Management Library
- * 
+ *
  * Handles all application settings including:
  * - Knowledge base management
  * - Security and privacy settings
@@ -241,7 +241,7 @@ export function removeKnowledgeBaseFolder(
     ...settings,
     knowledge: {
       ...settings.knowledge,
-      folders: settings.knowledge.folders.filter((f) => f.id !== folderId),
+      folders: settings.knowledge.folders.filter(f => f.id !== folderId),
     },
     lastUpdated: new Date(),
   };
@@ -255,7 +255,7 @@ export function toggleKnowledgeBaseFolder(
     ...settings,
     knowledge: {
       ...settings.knowledge,
-      folders: settings.knowledge.folders.map((f) =>
+      folders: settings.knowledge.folders.map(f =>
         f.id === folderId ? { ...f, enabled: !f.enabled } : f
       ),
     },
@@ -273,7 +273,7 @@ export function updateKnowledgeBaseFolderStats(
     ...settings,
     knowledge: {
       ...settings.knowledge,
-      folders: settings.knowledge.folders.map((f) =>
+      folders: settings.knowledge.folders.map(f =>
         f.id === folderId
           ? { ...f, fileCount, totalSize, lastIndexed: new Date() }
           : f
@@ -318,7 +318,7 @@ export function removeFileTypeFromBlacklist(
     security: {
       ...settings.security,
       fileTypeBlacklist: settings.security.fileTypeBlacklist.filter(
-        (ft) => ft !== normalized
+        ft => ft !== normalized
       ),
     },
     lastUpdated: new Date(),
@@ -402,7 +402,10 @@ export function validateSettings(settings: AppSettings): string[] {
     errors.push("Font size must be between 12 and 18");
   }
 
-  if (settings.advanced.temperatureDefault < 0 || settings.advanced.temperatureDefault > 2) {
+  if (
+    settings.advanced.temperatureDefault < 0 ||
+    settings.advanced.temperatureDefault > 2
+  ) {
     errors.push("Temperature must be between 0 and 2");
   }
 
@@ -439,16 +442,27 @@ export function createMockSettings(): AppSettings {
     "Research Papers",
     "/home/user/research"
   );
-  updated = addKnowledgeBaseFolder(
-    updated,
-    "Code Samples",
-    "/home/user/code"
-  );
+  updated = addKnowledgeBaseFolder(updated, "Code Samples", "/home/user/code");
 
   // Update folder stats
-  updated = updateKnowledgeBaseFolderStats(updated, updated.knowledge.folders[0].id, 42, 15728640); // 15 MB
-  updated = updateKnowledgeBaseFolderStats(updated, updated.knowledge.folders[1].id, 28, 52428800); // 50 MB
-  updated = updateKnowledgeBaseFolderStats(updated, updated.knowledge.folders[2].id, 156, 104857600); // 100 MB
+  updated = updateKnowledgeBaseFolderStats(
+    updated,
+    updated.knowledge.folders[0].id,
+    42,
+    15728640
+  ); // 15 MB
+  updated = updateKnowledgeBaseFolderStats(
+    updated,
+    updated.knowledge.folders[1].id,
+    28,
+    52428800
+  ); // 50 MB
+  updated = updateKnowledgeBaseFolderStats(
+    updated,
+    updated.knowledge.folders[2].id,
+    156,
+    104857600
+  ); // 100 MB
 
   // Add some custom blacklisted file types
   updated = addFileTypeToBlacklist(updated, ".scr");

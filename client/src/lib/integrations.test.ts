@@ -55,7 +55,11 @@ describe("Third-Party Integrations", () => {
 
   describe("Integration Creation", () => {
     it("should create a basic integration", () => {
-      const integration = createIntegration("github", "GitHub", "My GitHub account");
+      const integration = createIntegration(
+        "github",
+        "GitHub",
+        "My GitHub account"
+      );
 
       expect(integration.id).toBeDefined();
       expect(integration.type).toBe("github");
@@ -168,7 +172,11 @@ describe("Third-Party Integrations", () => {
     it("should update sync status to error with message", () => {
       let integration = createIntegration("github", "GitHub", "Test");
 
-      integration = updateSyncStatus(integration, "error", "Connection timeout");
+      integration = updateSyncStatus(
+        integration,
+        "error",
+        "Connection timeout"
+      );
 
       expect(integration.syncStatus).toBe("error");
       expect(integration.error).toBe("Connection timeout");
@@ -198,12 +206,9 @@ describe("Third-Party Integrations", () => {
     it("should complete integration action", () => {
       let action = createIntegrationAction("int_123", "sync");
 
-      action = updateIntegrationAction(
-        action,
-        "completed",
-        100,
-        { itemsSync: 42 }
-      );
+      action = updateIntegrationAction(action, "completed", 100, {
+        itemsSync: 42,
+      });
 
       expect(action.status).toBe("completed");
       expect(action.progress).toBe(100);
@@ -260,7 +265,9 @@ describe("Third-Party Integrations", () => {
       expect(integration.isConnected).toBe(true);
       expect(integration.account?.email).toBe("omnecor.user@gmail.com");
       expect(integration.storageQuota?.used).toBeGreaterThan(0);
-      expect(integration.storageQuota?.total).toBeGreaterThan(integration.storageQuota?.used);
+      expect(integration.storageQuota?.total).toBeGreaterThan(
+        integration.storageQuota?.used
+      );
     });
   });
 

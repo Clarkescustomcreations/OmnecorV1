@@ -171,10 +171,10 @@ export class FileSystemWatcherService extends EventEmitter {
     };
 
     // Wire up chokidar events with debouncing
-    watcher.on("add", (p) => this.handleEvent(managed, "add", p));
-    watcher.on("change", (p) => this.handleEvent(managed, "change", p));
-    watcher.on("unlink", (p) => this.handleEvent(managed, "unlink", p));
-    watcher.on("unlinkDir", (p) => this.handleEvent(managed, "unlinkDir", p));
+    watcher.on("add", p => this.handleEvent(managed, "add", p));
+    watcher.on("change", p => this.handleEvent(managed, "change", p));
+    watcher.on("unlink", p => this.handleEvent(managed, "unlink", p));
+    watcher.on("unlinkDir", p => this.handleEvent(managed, "unlinkDir", p));
 
     watcher.on("ready", () => {
       managed.isReady = true;
@@ -184,8 +184,11 @@ export class FileSystemWatcherService extends EventEmitter {
       );
     });
 
-    watcher.on("error", (err) => {
-      console.error(`[Omnecor FileWatcher] Error on project="${projectId}":`, err);
+    watcher.on("error", err => {
+      console.error(
+        `[Omnecor FileWatcher] Error on project="${projectId}":`,
+        err
+      );
       this.emit("watcherError", { projectId, error: err });
     });
 
@@ -241,7 +244,9 @@ export class FileSystemWatcherService extends EventEmitter {
   async getFileTree(projectId: string): Promise<string[]> {
     const managed = this.watchers.get(projectId);
     if (!managed) {
-      throw new Error(`[Omnecor FileWatcher] No watcher registered for project "${projectId}"`);
+      throw new Error(
+        `[Omnecor FileWatcher] No watcher registered for project "${projectId}"`
+      );
     }
 
     // chokidar exposes getWatched() which returns { dir: [files] }
@@ -264,7 +269,7 @@ export class FileSystemWatcherService extends EventEmitter {
    */
   async shutdown(): Promise<void> {
     const projectIds = Array.from(this.watchers.keys());
-    await Promise.all(projectIds.map((id) => this.unregisterProject(id)));
+    await Promise.all(projectIds.map(id => this.unregisterProject(id)));
     this.removeAllListeners();
     console.log("[Omnecor FileWatcher] All watchers shut down.");
   }
@@ -287,7 +292,8 @@ export class FileSystemWatcherService extends EventEmitter {
 
     // Track file count
     if (eventType === "add") managed.fileCount++;
-    if (eventType === "unlink") managed.fileCount = Math.max(0, managed.fileCount - 1);
+    if (eventType === "unlink")
+      managed.fileCount = Math.max(0, managed.fileCount - 1);
 
     // Clear existing debounce timer for this (event, path) pair
     const existing = managed.debounceTimers.get(timerKey);
