@@ -1,22 +1,22 @@
-# CORTEX Installation Guide
+# Omnecor Installation Guide
 
-**CORTEX** is the ultimate all-in-one AI workbench for Linux systems. This guide provides step-by-step instructions for installing and configuring CORTEX on your machine.
+**Omnecor HMCI** is the premier Human-Machine Collaboration Interface. This guide provides step-by-step instructions for installing and configuring your Omnecor workstation.
 
 ## System Requirements
 
 ### Minimum Requirements
 - **OS:** Debian 12 or Ubuntu 20.04+
-- **CPU:** 2 cores (4+ recommended)
-- **RAM:** 4GB (8GB+ recommended for local AI models)
-- **Storage:** 10GB free space (20GB+ for local models)
-- **Internet:** Required for API model access (optional for local-only mode)
+- **CPU:** 4+ cores
+- **RAM:** 8GB (16GB+ recommended for local AI models)
+- **Storage:** 20GB free space
+- **Internet:** Required for cloud-provider API access
 
 ### Recommended Setup
-- **OS:** Ubuntu 24.04 LTS or Debian 12
+- **OS:** Ubuntu 24.04 LTS
 - **CPU:** 8+ cores
-- **RAM:** 16GB+
-- **GPU:** NVIDIA (CUDA support) or AMD (ROCm support) for accelerated inference
-- **Storage:** 50GB+ SSD for comfortable model storage
+- **RAM:** 32GB+
+- **GPU:** NVIDIA (CUDA support) for accelerated inference
+- **Storage:** 100GB+ SSD
 
 ## Installation Steps
 
@@ -34,219 +34,66 @@ sudo apt-get install -y \
   python3 \
   python3-pip \
   nodejs \
-  npm
+  pnpm
 ```
 
-### 2. Install Node.js (if not already installed)
+### 2. Clone the Repository
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt-get install -y nodejs
+git clone [repository-url]
+cd omnecor-hmci-ai-workstation
 ```
 
-### 3. Clone or Download CORTEX
+### 3. Install Dependencies
 
 ```bash
-# Clone from repository
-git clone https://github.com/your-repo/cortex-ai-workstation.git
-cd cortex-ai-workstation
-
-# Or download as ZIP
-wget https://github.com/your-repo/cortex-ai-workstation/archive/main.zip
-unzip main.zip
-cd cortex-ai-workstation-main
-```
-
-### 4. Install Dependencies
-
-```bash
-# Install Node.js dependencies
-npm install
-# or with pnpm (recommended)
 pnpm install
 ```
 
-### 5. Configure Environment Variables
+### 4. Configure Environment Variables
 
-Create a `.env.local` file in the project root:
+Create a `.env` file in the project root based on `.env.example`:
 
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
-Edit `.env.local` with your configuration:
+Edit `.env` with your configuration:
 
 ```env
-# API Keys (optional, for cloud models)
+# API Keys (for cloud models)
 OPENAI_API_KEY=your_key_here
 ANTHROPIC_API_KEY=your_key_here
 GOOGLE_GEMINI_API_KEY=your_key_here
-GROQ_API_KEY=your_key_here
 
 # Local Model Configuration
 OLLAMA_HOST=http://localhost:11434
-LLAMA_CPP_HOST=http://localhost:8000
 
 # Application Settings
-CORTEX_PORT=3000
-CORTEX_HOST=localhost
+PORT=3000
 ```
 
-### 6. Set Up Local AI Models (Optional)
-
-#### Install Ollama
-
-```bash
-# Download and install Ollama
-curl -fsSL https://ollama.ai/install.sh | sh
-
-# Start Ollama service
-ollama serve
-
-# In another terminal, pull a model
-ollama pull mistral
-ollama pull llama2
-```
-
-#### Install Llama.cpp (Alternative)
-
-```bash
-git clone https://github.com/ggerganov/llama.cpp
-cd llama.cpp
-make
-./server -m path/to/model.gguf
-```
-
-### 7. Start CORTEX
+### 5. Start Omnecor
 
 ```bash
 # Development mode
 npm run dev
-# or
-pnpm dev
 
 # Production build
 npm run build
 npm run start
-# or
-pnpm build
-pnpm start
 ```
 
-The application will be available at `http://localhost:3000`
-
-## Configuration
-
-### Database Setup (Optional)
-
-If using the database features:
-
-```bash
-# Run migrations
-npm run db:push
-```
-
-### API Provider Configuration
-
-Configure your preferred AI providers in the **Settings > Integrations** section:
-
-1. **OpenAI** - Requires API key from https://platform.openai.com
-2. **Anthropic** - Requires API key from https://console.anthropic.com
-3. **Google Gemini** - Requires API key from https://makersuite.google.com
-4. **Groq** - Requires API key from https://console.groq.com
-
-### Local Model Setup
-
-Configure local models in **Settings > Model Hub**:
-
-1. Ensure Ollama or Llama.cpp is running
-2. Navigate to Model Hub
-3. Click "Add Local Model"
-4. Select from available models or enter custom endpoint
+The application will be available at `http://localhost:3000`.
 
 ## Troubleshooting
 
 ### Port Already in Use
+If port 3000 is occupied, change the `PORT` in your `.env` file.
 
-If port 3000 is already in use:
-
-```bash
-# Use a different port
-PORT=3001 npm run dev
-
-# Or find and kill the process
-lsof -i :3000
-kill -9 <PID>
-```
-
-### Memory Issues
-
-Enable Zram buffer for systems with limited RAM:
-
-```bash
-# Enable Zram
-sudo modprobe zram
-echo 2G | sudo tee /sys/block/zram0/disksize
-sudo mkswap /dev/zram0
-sudo swapon /dev/zram0
-```
-
-### GPU Acceleration Not Working
-
-Ensure NVIDIA CUDA toolkit is installed:
-
-```bash
-# Install NVIDIA CUDA
-sudo apt-get install -y nvidia-cuda-toolkit
-
-# Verify installation
-nvidia-smi
-```
-
-### Connection Issues with Local Models
-
-Verify Ollama is running:
-
-```bash
-# Check Ollama status
-curl http://localhost:11434/api/tags
-
-# Restart Ollama if needed
-sudo systemctl restart ollama
-```
-
-## Uninstallation
-
-To completely remove CORTEX:
-
-```bash
-# Remove application directory
-rm -rf ~/cortex-ai-workstation
-
-# Remove configuration
-rm -rf ~/.cortex
-
-# Remove local models (if using Ollama)
-rm -rf ~/.ollama
-```
-
-## Next Steps
-
-1. **Read the User Guide** - See `USER_GUIDE.md` for detailed feature documentation
-2. **Configure Preferences** - Customize theme, language, and AI settings
-3. **Import Knowledge Base** - Add project folders to the Neural Brain Map
-4. **Connect Integrations** - Link GitHub, Notion, Slack, and cloud storage
-5. **Start Creating** - Begin using CORTEX for your AI projects
+### GPU Acceleration
+Ensure NVIDIA drivers and CUDA toolkit are installed for hardware-accelerated model inference.
 
 ## Support
 
-For issues or questions:
-
-1. Check the **Troubleshooting Guide** - See `TROUBLESHOOTING.md`
-2. Review **Help Documentation** - Access via **Help** menu in CORTEX
-3. Visit the **GitHub Issues** page for known problems
-4. Contact support at support@cortex.ai
-
-## License
-
-CORTEX is licensed under the MIT License. See LICENSE file for details.
+For issues, please refer to `TROUBLESHOOTING.md`.

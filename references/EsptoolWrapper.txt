@@ -1,7 +1,8 @@
-﻿# ============================================================
+# ============================================================
 # File: flash_mcu.py
 # Purpose:
-#   CLI wrapper around esptool.py for flashing ESP MCUs.
+#   CLI wrapper around esptool.py for flashing ESP MCUs within the 
+#   Omnecor HMCI hardware integration layer.
 #
 # Features:
 #   - Accepts CLI args:
@@ -10,7 +11,7 @@
 #       --firmware_path
 #   - Executes esptool.py via subprocess
 #   - Streams stdout/stderr in real-time
-#   - Emits JSON lines for Node.js parsing
+#   - Emits JSON lines for Omnecor backend parsing
 #
 # Example:
 #   python flash_mcu.py \
@@ -28,7 +29,7 @@ import threading
 
 def emit(event_type, message):
     """
-    Print a JSON line immediately so the Node.js backend
+    Print a JSON line immediately so the Omnecor backend
     can parse progress in real-time.
     """
     payload = {
@@ -51,7 +52,7 @@ def stream_reader(stream, stream_type):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="ESPTool Flash Wrapper")
+    parser = argparse.ArgumentParser(description="Omnecor ESPTool Flash Wrapper")
 
     parser.add_argument(
         "--port",

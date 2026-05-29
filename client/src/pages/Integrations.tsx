@@ -1,4 +1,4 @@
-import CortexDashboardLayout from "@/components/CortexDashboardLayout";
+import OmnecorDashboardLayout from "@/components/OmnecorDashboardLayout";
 import IntegrationsHub from "@/components/IntegrationsHub";
 import { Plug } from "lucide-react";
 
@@ -13,7 +13,7 @@ import { Plug } from "lucide-react";
  */
 export default function Integrations() {
   return (
-    <CortexDashboardLayout>
+    <OmnecorDashboardLayout>
       <div className="h-full flex flex-col bg-background">
         <div className="border-b border-border bg-card px-6 py-4">
           <div className="flex items-center gap-3">
@@ -31,6 +31,6 @@ export default function Integrations() {
           <IntegrationsHub />
         </div>
       </div>
-    </CortexDashboardLayout>
+    </OmnecorDashboardLayout>
   );
 }

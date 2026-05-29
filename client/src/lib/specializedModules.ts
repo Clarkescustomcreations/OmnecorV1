@@ -378,7 +378,7 @@ export function createMockLLMBuilderSession(): LLMBuilderSession {
   const loraConfig = createLoRAConfig(
     "Omnecor Adapter",
     "mistral-7b",
-    "/data/cortex-training-dataset"
+    "/data/omnecor-training-dataset"
   );
 
   session = addLoRAConfig(session, loraConfig);
@@ -403,7 +403,7 @@ export function createMockLLMBuilderSession(): LLMBuilderSession {
 export function createMockBlenderProject(): BlenderProject {
   let project = createBlenderProject(
     "Omnecor Interface Design",
-    "/projects/cortex-ui-3d.blend",
+    "/projects/omnecor-ui-3d.blend",
     "3D visualization of Omnecor dashboard"
   );
 
@@ -420,7 +420,7 @@ export function createMockBlenderProject(): BlenderProject {
 export function createMockPCBProject(): PCBProject {
   let project = createPCBProject(
     "Omnecor Control Board",
-    "/projects/cortex-control.kicad_pcb",
+    "/projects/omnecor-control.kicad_pcb",
     "Main control board for Omnecor AI workstation"
   );
 

@@ -172,7 +172,7 @@ export function getDefaultSettings(): AppSettings {
       fileTypeBlacklist: [".exe", ".dll", ".so", ".dylib", ".bin"],
       maliciousFileScan: true,
       scanOnUpload: true,
-      quarantineLocation: "~/.cortex/quarantine",
+      quarantineLocation: "~/.omnecor/quarantine",
       encryptionEnabled: false,
       apiKeyEncryption: true,
       sessionTimeout: 60,
@@ -432,7 +432,7 @@ export function createMockSettings(): AppSettings {
   let updated = addKnowledgeBaseFolder(
     settings,
     "Omnecor Projects",
-    "/home/user/cortex-projects"
+    "/home/user/omnecor-projects"
   );
   updated = addKnowledgeBaseFolder(
     updated,

@@ -1,4 +1,4 @@
-import CortexDashboardLayout from "@/components/CortexDashboardLayout";
+import OmnecorDashboardLayout from "@/components/OmnecorDashboardLayout";
 import ChatInterface from "@/components/ChatInterface";
 import ContextTransparencyIndicator from "@/components/ContextTransparencyIndicator";
 import VisualContextMap from "@/components/VisualContextMap";
@@ -102,7 +102,7 @@ export default function Chat() {
   }, []);
 
   return (
-    <CortexDashboardLayout>
+    <OmnecorDashboardLayout>
       <div className="h-full flex flex-col bg-background">
         {/* Header */}
         <div className="border-b border-border bg-card px-6 py-4">
@@ -146,6 +146,6 @@ export default function Chat() {
           </div>
         </div>
       </div>
-    </CortexDashboardLayout>
+    </OmnecorDashboardLayout>
   );
 }

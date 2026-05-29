@@ -1,4 +1,4 @@
-import OmnecorDashboardLayout from "@/components/CortexDashboardLayout";
+import OmnecorDashboardLayout from "@/components/OmnecorDashboardLayout";
 import SettingsPanel from "@/components/SettingsPanel";
 import { Settings } from "lucide-react";
 

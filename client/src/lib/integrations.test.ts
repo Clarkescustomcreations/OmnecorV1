@@ -233,9 +233,9 @@ describe("Third-Party Integrations", () => {
       const integration = createMockGitHubIntegration();
 
       expect(integration.isConnected).toBe(true);
-      expect(integration.account?.username).toBe("cortex-user");
+      expect(integration.account?.username).toBe("omnecor-user");
       expect(integration.repositories?.length).toBeGreaterThan(0);
-      expect(integration.repositories?.[0].name).toBe("cortex-ai-workstation");
+      expect(integration.repositories?.[0].name).toBe("omnecor.ai-workstation");
     });
 
     it("should create mock Notion integration", () => {
@@ -258,7 +258,7 @@ describe("Third-Party Integrations", () => {
       const integration = createMockGoogleDriveIntegration();
 
       expect(integration.isConnected).toBe(true);
-      expect(integration.account?.email).toBe("cortex.user@gmail.com");
+      expect(integration.account?.email).toBe("omnecor.user@gmail.com");
       expect(integration.storageQuota?.used).toBeGreaterThan(0);
       expect(integration.storageQuota?.total).toBeGreaterThan(integration.storageQuota?.used);
     });

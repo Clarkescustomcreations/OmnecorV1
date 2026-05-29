@@ -79,7 +79,7 @@ export const DEFAULT_ADVANCED_SETTINGS: AdvancedSettings = {
     autoCleanup: true,
     cleanupFrequency: 'weekly',
     archiveOldData: true,
-    archivePath: '~/.cortex/archive',
+    archivePath: '~/.omnecor/archive',
   },
   performanceTuning: {
     enableGPUAcceleration: true,
@@ -122,7 +122,7 @@ export const PERFORMANCE_PRESETS = {
 export class AdvancedSettingsManager {
   private settings: AdvancedSettings = { ...DEFAULT_ADVANCED_SETTINGS };
   private listeners: Set<(settings: AdvancedSettings) => void> = new Set();
-  private storageKey = 'cortex-advanced-settings';
+  private storageKey = 'omnecor-advanced-settings';
 
   constructor() {
     this.loadSettings();

@@ -1,4 +1,4 @@
-import CortexDashboardLayout from "@/components/CortexDashboardLayout";
+import OmnecorDashboardLayout from "@/components/OmnecorDashboardLayout";
 import SpecializedModuleLauncher from "@/components/SpecializedModuleLauncher";
 import { Zap } from "lucide-react";
 
@@ -12,7 +12,7 @@ import { Zap } from "lucide-react";
  */
 export default function Pipelines() {
   return (
-    <CortexDashboardLayout>
+    <OmnecorDashboardLayout>
       <div className="h-full flex flex-col bg-background">
         <div className="border-b border-border bg-card px-6 py-4">
           <div className="flex items-center gap-3">
@@ -30,6 +30,6 @@ export default function Pipelines() {
           <SpecializedModuleLauncher />
         </div>
       </div>
-    </CortexDashboardLayout>
+    </OmnecorDashboardLayout>
   );
 }

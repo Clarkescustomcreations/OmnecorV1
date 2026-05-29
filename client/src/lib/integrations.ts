@@ -343,8 +343,8 @@ export function createMockGitHubIntegration(): GitHubIntegration {
   const connected = connectIntegration(
     integration,
     {
-      username: "cortex-user",
-      email: "user@cortex.ai",
+      username: "omnecor-user",
+      email: "user@omnecor.ai",
       id: "user_123",
     },
     token
@@ -356,8 +356,8 @@ export function createMockGitHubIntegration(): GitHubIntegration {
     repositories: [
       {
         id: 1,
-        name: "cortex-ai-workstation",
-        url: "https://github.com/cortex/cortex-ai-workstation",
+        name: "omnecor.ai-workstation",
+        url: "https://github.com/omnecor/omnecor.ai-workstation",
         description: "The Ultimate All-in-One AI Workstation",
         isPrivate: false,
         lastPushed: new Date(Date.now() - 3600000),
@@ -365,7 +365,7 @@ export function createMockGitHubIntegration(): GitHubIntegration {
       {
         id: 2,
         name: "neural-map-visualizer",
-        url: "https://github.com/cortex/neural-map-visualizer",
+        url: "https://github.com/omnecor/neural-map-visualizer",
         description: "Spatial neural network visualization and graph management",
         isPrivate: true,
         lastPushed: new Date(Date.now() - 86400000),
@@ -390,7 +390,7 @@ export function createMockNotionIntegration(): NotionIntegration {
   const connected = connectIntegration(
     integration,
     {
-      username: "cortex-workspace",
+      username: "omnecor-workspace",
       id: "workspace_123",
     },
     token
@@ -432,7 +432,7 @@ export function createMockSlackIntegration(): SlackIntegration {
   const connected = connectIntegration(
     integration,
     {
-      username: "cortex-bot",
+      username: "omnecor-bot",
       id: "bot_123",
     },
     token
@@ -473,8 +473,8 @@ export function createMockGoogleDriveIntegration(): CloudStorageIntegration {
   const connected = connectIntegration(
     integration,
     {
-      username: "cortex.user@gmail.com",
-      email: "cortex.user@gmail.com",
+      username: "omnecor.user@gmail.com",
+      email: "omnecor.user@gmail.com",
       id: "user_goog_123",
     },
     token

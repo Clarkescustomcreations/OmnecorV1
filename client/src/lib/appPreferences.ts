@@ -53,7 +53,7 @@ export const DEFAULT_PREFERENCES: AppPreferences = {
 export class AppPreferencesManager {
   private preferences: AppPreferences = { ...DEFAULT_PREFERENCES };
   private listeners: Set<(prefs: AppPreferences) => void> = new Set();
-  private storageKey = 'cortex-app-preferences';
+  private storageKey = 'omnecor-app-preferences';
 
   constructor() {
     this.loadPreferences();

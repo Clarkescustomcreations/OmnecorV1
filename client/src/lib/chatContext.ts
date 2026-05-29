@@ -236,7 +236,7 @@ export function getExcludedFiles(conversation: ConversationContext): ContextFile
 export const mockContextFiles: ContextFile[] = [
   {
     id: "file_1",
-    path: "/projects/cortex/src/main.ts",
+    path: "/projects/omnecor/src/main.ts",
     name: "main.ts",
     type: "file",
     size: 2048,
@@ -247,7 +247,7 @@ export const mockContextFiles: ContextFile[] = [
   },
   {
     id: "file_2",
-    path: "/projects/cortex/src/utils.ts",
+    path: "/projects/omnecor/src/utils.ts",
     name: "utils.ts",
     type: "file",
     size: 1536,
@@ -258,7 +258,7 @@ export const mockContextFiles: ContextFile[] = [
   },
   {
     id: "file_3",
-    path: "/projects/cortex/README.md",
+    path: "/projects/omnecor/README.md",
     name: "README.md",
     type: "file",
     size: 4096,
@@ -269,7 +269,7 @@ export const mockContextFiles: ContextFile[] = [
   },
   {
     id: "file_4",
-    path: "/projects/cortex/config.json",
+    path: "/projects/omnecor/config.json",
     name: "config.json",
     type: "file",
     size: 512,

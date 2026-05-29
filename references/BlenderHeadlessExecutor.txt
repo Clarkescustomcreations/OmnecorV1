@@ -1,8 +1,9 @@
-﻿# ============================================================
+# ============================================================
 # File: blender_bridge.py
 # Purpose:
 #   Execute external Python scripts inside Blender's
-#   headless/background environment.
+#   headless/background environment for the Omnecor HMCI
+#   Hardware Integration Layer.
 #
 # Usage:
 #   blender -b -P blender_bridge.py -- --script my_generator.py
@@ -23,7 +24,7 @@ import traceback
 
 def emit(status, message, extra=None):
     """
-    Emit structured JSON output for backend parsing.
+    Emit structured JSON output for Omnecor backend parsing.
     """
     payload = {
         "status": status,
@@ -49,7 +50,7 @@ def parse_blender_args():
         argv = []
 
     parser = argparse.ArgumentParser(
-        description="Blender Headless Script Executor"
+        description="Omnecor Blender Headless Script Executor"
     )
 
     parser.add_argument(

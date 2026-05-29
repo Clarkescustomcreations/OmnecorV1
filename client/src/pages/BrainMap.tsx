@@ -1,4 +1,4 @@
-import CortexDashboardLayout from "@/components/CortexDashboardLayout";
+import OmnecorDashboardLayout from "@/components/OmnecorDashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,7 +36,7 @@ export default function BrainMap() {
   const selectedNode = neuralNetwork.nodes.find((n) => n.id === selectedNodeId);
 
   return (
-    <CortexDashboardLayout>
+    <OmnecorDashboardLayout>
       <div className="h-full flex flex-col bg-background">
         {/* Header */}
         <div className="border-b border-border bg-card px-6 py-4">
@@ -179,6 +179,6 @@ export default function BrainMap() {
           </div>
         </div>
       </div>
-    </CortexDashboardLayout>
+    </OmnecorDashboardLayout>
   );
 }

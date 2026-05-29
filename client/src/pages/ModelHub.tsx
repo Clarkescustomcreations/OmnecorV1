@@ -1,4 +1,4 @@
-import CortexDashboardLayout from "@/components/CortexDashboardLayout";
+import OmnecorDashboardLayout from "@/components/OmnecorDashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Zap, Plus, RefreshCw } from "lucide-react";
@@ -69,7 +69,7 @@ export default function ModelHub() {
   const allModels = [...localModels, ...apiModels];
 
   return (
-    <CortexDashboardLayout>
+    <OmnecorDashboardLayout>
       <div className="h-full flex flex-col bg-background">
         {/* Header */}
         <div className="border-b border-border bg-card px-6 py-4">
@@ -193,6 +193,6 @@ export default function ModelHub() {
           </div>
         </div>
       </div>
-    </CortexDashboardLayout>
+    </OmnecorDashboardLayout>
   );
 }

@@ -64,7 +64,7 @@ export default function SettingsPanel({ className }: SettingsPanelProps) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `cortex-settings-${new Date().toISOString().split("T")[0]}.json`;
+    a.download = `omnecor-settings-${new Date().toISOString().split("T")[0]}.json`;
     a.click();
   };
 
